@@ -18,13 +18,56 @@ package cz.muni.fi.mir.mathmlunificator;
 import java.util.Objects;
 
 /**
+ * Representation of multi-level order of elements in
+ * {@link MathMLUnificator#nodesByDepth} data structure.
+ *
  * @author Michal Růžička
+ * @param <MajorLevel> The top level order in the hierarchy. Expected to be
+ * {@link Integer}.
+ * @param <MinorLevel> The second (lower) level order in the hierarchy. Expected
+ * to be {@link Integer}.
  */
 public class NodeLevel<MajorLevel, MinorLevel> {
 
+    /**
+     * <p>
+     * The top level order the object in the hierarchy. Usually will be
+     * {@link Integer}.
+     * </p>
+     * <p>
+     * In {@link MathMLUnificator} the major level represents depth of the
+     * {@link org.w3c.dom.Node} in the document DOM.
+     * </p>
+     */
     public MajorLevel major;
+
+    /**
+     * <p>
+     * The second (lower) level order the object in the hierarchy. Usually will
+     * be {@link Integer}.
+     * </p>
+     * <p>
+     * In {@link MathMLUnificator} the minor level represents type of the
+     * {@link org.w3c.dom.Node} in MathML: <code>1</code> represents elements of
+     * MathML operators, <code>2</code> represents other types of MathML
+     * elements.
+     * </p>
+     */
     public MinorLevel minor;
 
+    /**
+     * Construct an instance of representation of multi-level order of elements
+     * in {@link MathMLUnificator#nodesByDepth} data structure.
+     *
+     * @param major The top level order the object in the hierarchy. In
+     * {@link MathMLUnificator} expected to be {@link Integer} representing
+     * depth of the {@link org.w3c.dom.Node} in the document DOM.
+     * @param minor The second (lower) level order the object in the hierarchy.
+     * In {@link MathMLUnificator} expected to be {@link Integer} representing
+     * the type of the {@link org.w3c.dom.Node} in MathML: <code>1</code>
+     * represents elements of MathML operators, <code>2</code> represents other
+     * types of MathML elements.
+     */
     public NodeLevel(MajorLevel major, MinorLevel minor) {
         this.major = major;
         this.minor = minor;

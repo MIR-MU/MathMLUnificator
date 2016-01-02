@@ -25,10 +25,22 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * Command line tool that enables the user to select multiple input files and
+ * print results of MathML unification by {@link MathMLUnificator} to the
+ * application standard output.
+ *
  * @author Michal Růžička
  */
 public class MathMLUnificatorCommandLineTool {
 
+    /**
+     * Main (starting) method of the command line application.
+     *
+     * @param argv Array of command line arguments that are expected to be
+     * filesystem paths to input XML documents with MathML to be unified.
+     * @throws ParserConfigurationException If a XML DOM builder cannot be
+     * created with the configuration requested.
+     */
     public static void main(String argv[]) throws ParserConfigurationException {
 
         for (String filepath : argv) {

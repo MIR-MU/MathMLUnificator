@@ -23,14 +23,28 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 
 /**
+ * Tools for outputing XML.
+ *
  * @author Michal Růžička
  */
 public class XMLOut {
 
+    /**
+     * Pretty print W3C DOM represented XML document to the application standard
+     * output.
+     *
+     * @param doc W3C DOM represented XML document to pretty print.
+     */
     public static void xmlStdoutSerializer(Document doc) {
         xmlSerializer(doc, System.out);
     }
 
+    /**
+     * Pretty print W3C DOM represented XML document to a given output stream.
+     *
+     * @param doc W3C DOM represented XML document to pretty print.
+     * @param os Output stream to pretty print input XML to.
+     */
     public static void xmlSerializer(Document doc, OutputStream os) {
         DOMImplementation domImpl = doc.getImplementation();
         DOMImplementationLS ls = (DOMImplementationLS) domImpl;

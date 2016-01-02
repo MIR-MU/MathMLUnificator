@@ -16,19 +16,42 @@
 package cz.muni.fi.mir.mathmlunificator.config;
 
 /**
+ * Various constants definitions used by MathML Unificator.
+ *
  * @author Michal Růžička
  */
 public class Constants {
 
+    /**
+     * MathML XML namespace
+     */
     public static final String MATHMLNS = "http://www.w3.org/1998/Math/MathML";
+    /**
+     * MathML XML root element name
+     */
     public static final String MATHMLROOTELMNT = "math";
 
+    /**
+     * Presentation MathML operator element name
+     */
     public static final String PMATHMLOPERATOR = "mo";
+    /**
+     * Presentation MathML identifier element name
+     */
     public static final String PMATHMLIDENTIFIER = "mi";
 
+    /**
+     * MathML Unificator XML markup namespace
+     */
     public static final String UNIFIEDMATHNS = "http://mir.fi.muni.cz/mathml-unification/";
+    /**
+     * MathML Unificator XML root element name
+     */
     public static final String UNIFIEDMATHROOTELMNT = "unified-math";
 
+    /**
+     * Symbol used in MathML Unificator XML markup for XML tree substitutions
+     */
     public static final String UNIFICATOR = "\u25CD";
 
 }
