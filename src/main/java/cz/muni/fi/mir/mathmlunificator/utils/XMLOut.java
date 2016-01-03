@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Michal Růžička.
+ * Copyright 2016 MIR@MU Project.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlunificator.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -54,6 +55,19 @@ public class XMLOut {
         lss.getDomConfig().setParameter("format-pretty-print", true);
         lso.setByteStream(os);
         lss.write(doc, lso);
+    }
+
+    /**
+     * Transform W3C DOM represented XML document to pretty-printed string
+     * representation.
+     *
+     * @param doc W3C DOM represented XML document to pretty print.
+     * @return Pretty-printed strign representation of the input DOM.
+     */
+    public static String xmlStringSerializer(Document doc) {
+        OutputStream os = new ByteArrayOutputStream();
+        xmlSerializer(doc, os);
+        return os.toString();
     }
 
 }

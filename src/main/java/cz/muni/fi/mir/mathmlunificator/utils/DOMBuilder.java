@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Michal Růžička.
+ * Copyright 2016 MIR@MU Project.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -52,6 +53,25 @@ public class DOMBuilder {
     }
 
     /**
+     * Build W3C DOM representation of XML file specified by filesystem path.
+     *
+     * @param doc String with XML document to build DOM from.
+     * @return W3C DOM representation of the XML document.
+     * @throws ParserConfigurationException If a DocumentBuilder cannot be
+     * created which satisfies the configuration requested.
+     * @throws SAXException If any parse errors occur.
+     * @throws IOException If any IO errors occur.
+     */
+    public static Document buildDoc(String doc) throws ParserConfigurationException, SAXException, IOException {
+
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        docFactory.setNamespaceAware(true);
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        return docBuilder.parse(IOUtils.toInputStream(doc));
+
+    }
+
+    /**
      * Build W3C DOM representation of XML from {@link java.io.File}.
      *
      * @param file XML {@link java.io.File} to build DOM from.
@@ -61,7 +81,7 @@ public class DOMBuilder {
      * @throws SAXException If any parse errors occur.
      * @throws IOException If any IO errors occur.
      */
-    public static Document buildDocFromFile(File file) throws ParserConfigurationException, SAXException, IOException {
+    public static Document buildDoc(File file) throws ParserConfigurationException, SAXException, IOException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setNamespaceAware(true);
@@ -81,7 +101,7 @@ public class DOMBuilder {
      * @throws SAXException If any parse errors occur.
      * @throws IOException If any IO errors occur.
      */
-    public static Document buildDocFromFile(InputSource is) throws ParserConfigurationException, SAXException, IOException {
+    public static Document buildDoc(InputSource is) throws ParserConfigurationException, SAXException, IOException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setNamespaceAware(true);
@@ -101,7 +121,7 @@ public class DOMBuilder {
      * @throws SAXException If any parse errors occur.
      * @throws IOException If any IO errors occur.
      */
-    public static Document buildDocFromFile(InputStream is) throws ParserConfigurationException, SAXException, IOException {
+    public static Document buildDoc(InputStream is) throws ParserConfigurationException, SAXException, IOException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setNamespaceAware(true);

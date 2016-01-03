@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Michal Růžička.
+ * Copyright 2016 MIR@MU Project.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ public class MathMLUnificator {
         String originalDoc = IOUtils.toString(is, "UTF-8");
 
         try {
-            Document doc = DOMBuilder.buildDocFromFile(new ByteArrayInputStream(originalDoc.getBytes("UTF-8")));
+            Document doc = DOMBuilder.buildDoc(new ByteArrayInputStream(originalDoc.getBytes("UTF-8")));
             unifyMathML(doc);
             XMLOut.xmlSerializer(doc, os);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
