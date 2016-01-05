@@ -16,7 +16,8 @@
                 <mi>c</mi>
             </mfrac>
         </math>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <math xmlns:uni="http://mir.fi.muni.cz/mathml-unification/"
+            uni:unification-level="1" uni:unification-max-level="4" xmlns="http://www.w3.org/1998/Math/MathML">
             <msup>
                 <mi>a</mi>
                 <mn>2</mn>
@@ -29,7 +30,8 @@
                 <mi>c</mi>
             </mfrac>
         </math>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <math xmlns:uni="http://mir.fi.muni.cz/mathml-unification/"
+            uni:unification-level="2" uni:unification-max-level="4" xmlns="http://www.w3.org/1998/Math/MathML">
             <msup>
                 <mi>◍</mi>
                 <mi>◍</mi>
@@ -40,12 +42,14 @@
                 <mi>◍</mi>
             </mfrac>
         </math>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <math xmlns:uni="http://mir.fi.muni.cz/mathml-unification/"
+            uni:unification-level="3" uni:unification-max-level="4" xmlns="http://www.w3.org/1998/Math/MathML">
             <mi>◍</mi>
             <mo>+</mo>
             <mi>◍</mi>
         </math>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <math xmlns:uni="http://mir.fi.muni.cz/mathml-unification/"
+            uni:unification-level="4" uni:unification-max-level="4" xmlns="http://www.w3.org/1998/Math/MathML">
             <mi>◍</mi>
             <mo>◍</mo>
             <mi>◍</mi>

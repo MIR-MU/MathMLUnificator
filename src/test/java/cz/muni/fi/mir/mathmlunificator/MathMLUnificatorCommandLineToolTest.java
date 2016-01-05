@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.apache.commons.io.IOUtils;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * @author Michal Růžička

@@ -24,13 +24,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.IOUtils;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -195,10 +199,24 @@ public class MathMLUnificator {
 
         // Build series of formulae of level by level unified MathML.
         NodeLevel<Integer, Integer> level = new NodeLevel<>(getMaxMajorNodesLevel(), NUMOFMINORLEVELS);
+        int levelAttrCounter = 1;
+        Collection<Attr> maxLevelAttrs = new LinkedList<>();
         while (level.major > 0) {
             if (nodesByDepth.containsKey(level)) {
                 if (unifyAtLevel(level)) {
-                    unifiedMathNode.appendChild(mathNode.cloneNode(true));
+                    Node thisLevelMathNode = mathNode.cloneNode(true);
+                    Attr thisLevelAttr = thisLevelMathNode.getOwnerDocument()
+                            .createAttributeNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_NS_PREFIX + ":" + UNIFIED_MATHML_LEVEL_ATTR);
+                    Attr maxLevelAttr = thisLevelMathNode.getOwnerDocument()
+                            .createAttributeNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_NS_PREFIX + ":" + UNIFIED_MATHML_MAX_LEVEL_ATTR);
+                    maxLevelAttrs.add(maxLevelAttr);
+
+                    thisLevelAttr.setTextContent(String.valueOf(levelAttrCounter++));
+
+                    ((Element) thisLevelMathNode).setAttributeNodeNS(thisLevelAttr);
+                    ((Element) thisLevelMathNode).setAttributeNodeNS(maxLevelAttr);
+
+                    unifiedMathNode.appendChild(thisLevelMathNode);
                 }
             }
             level.minor--;
@@ -207,7 +225,9 @@ public class MathMLUnificator {
                 level.minor = NUMOFMINORLEVELS;
             }
         }
-
+        for (Attr attr : maxLevelAttrs) {
+            attr.setTextContent(String.valueOf((levelAttrCounter - 1)));
+        }
     }
 
     /**

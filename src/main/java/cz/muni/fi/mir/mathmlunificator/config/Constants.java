@@ -26,6 +26,7 @@ public class Constants {
      * MathML XML namespace
      */
     public static final String MATHML_NS = "http://www.w3.org/1998/Math/MathML";
+
     /**
      * MathML XML root element name
      */
@@ -35,6 +36,7 @@ public class Constants {
      * Presentation MathML operator element name
      */
     public static final String PMATHML_OPERATOR = "mo";
+
     /**
      * Presentation MathML identifier element name
      */
@@ -44,10 +46,26 @@ public class Constants {
      * MathML Unificator XML markup namespace
      */
     public static final String UNIFIED_MATHML_NS = "http://mir.fi.muni.cz/mathml-unification/";
+
+    /**
+     * MathML Unificator XML markup namespace prefix
+     */
+    public static final String UNIFIED_MATHML_NS_PREFIX = "uni";
+
     /**
      * MathML Unificator XML root element name
      */
     public static final String UNIFIED_MATHML_ROOT_ELEM = "unified-math";
+
+    /**
+     * MathML Unification current unification level XML attribute
+     */
+    public static final String UNIFIED_MATHML_LEVEL_ATTR = "unification-level";
+
+    /**
+     * MathML Unification number of unification levels XML attribute
+     */
+    public static final String UNIFIED_MATHML_MAX_LEVEL_ATTR = "unification-max-level";
 
     /**
      * Symbol used in MathML Unificator XML markup for XML tree substitutions
