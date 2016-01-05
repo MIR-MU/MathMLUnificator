@@ -18,7 +18,7 @@ package cz.muni.fi.mir.mathmlunificator;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.apache.commons.io.IOUtils;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.*;
 
 /**
@@ -42,6 +42,7 @@ public class MathMLUnificatorCommandLineToolTest extends AbstractXMLTransformati
         String output = stdoutContent.toString();
         output = output.replaceAll("(### Processing file ').*(' ###)", "$1PATH REMOVED$2");
 
+        System.out.println("testMain – output:\n" + output);
         assertEquals(IOUtils.toString(getTestResource(testFile + ".expected-output.txt")), output);
 
     }

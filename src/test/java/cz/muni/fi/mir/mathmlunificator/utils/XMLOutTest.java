@@ -22,8 +22,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import javax.xml.parsers.ParserConfigurationException;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.*;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -45,7 +45,9 @@ public class XMLOutTest extends AbstractXMLTransformationTest {
             Document inputDoc = DOMBuilder.buildDoc(getInputXMLTestResource(testFile));
             OutputStream os = new ByteArrayOutputStream();
             XMLOut.xmlSerializer(inputDoc, os);
-            testXML(testFile, os.toString());
+            String output = os.toString();
+            System.out.println("testXmlSerializer – output:\n" + output);
+            testXML(testFile, output);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             fail(ex.getMessage());
         }
@@ -60,7 +62,9 @@ public class XMLOutTest extends AbstractXMLTransformationTest {
             System.setOut(new PrintStream(stdoutContent));
             XMLOut.xmlStdoutSerializer(inputDoc);
             System.setOut(stdout);
-            testXML(testFile, stdoutContent.toString());
+            String output = stdoutContent.toString();
+            System.out.println("testXmlStdoutSerializer – output:\n" + output);
+            testXML(testFile, output);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             fail(ex.getMessage());
         }
@@ -71,6 +75,7 @@ public class XMLOutTest extends AbstractXMLTransformationTest {
         try {
             Document inputDoc = DOMBuilder.buildDoc(getInputXMLTestResource(testFile));
             String outputDoc = XMLOut.xmlStringSerializer(inputDoc);
+            System.out.println("testXmlStringSerializer – output:\n" + outputDoc);
             testXML(testFile, outputDoc);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             fail(ex.getMessage());

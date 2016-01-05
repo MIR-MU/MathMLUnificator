@@ -16,12 +16,12 @@
 package cz.muni.fi.mir.mathmlunificator;
 
 import static cz.muni.fi.mir.mathmlunificator.config.Constants.MATHML_NS;
+import cz.muni.fi.mir.mathmlunificator.utils.XMLOut;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.w3c.dom.Document;
@@ -46,6 +46,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
             MathMLUnificator.unifyMathML(doc);
 
+            System.out.println("testUnifyMathML_Document – output:\n" + XMLOut.xmlStringSerializer(doc));
             testXML(expectedDoc, doc);
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
@@ -65,8 +66,10 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
             ByteArrayOutputStream osDoc = new ByteArrayOutputStream();
             MathMLUnificator.unifyMathML(getInputXMLTestResource("multiple-formulae.document-unification"), osDoc);
+            String doc = osDoc.toString("UTF-8");
 
-            testXML(expectedDoc, osDoc.toString("UTF-8"));
+            System.out.println("testUnifyMathML_InputStream_OutputStream – output:\n" + doc);
+            testXML(expectedDoc, doc);
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             fail(ex.getMessage());
@@ -90,6 +93,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
             Node node = nodeList.item(0);
             MathMLUnificator.unifyMathMLNode(node);
 
+            System.out.println("testUnifyMathMLNode – output:\n" + XMLOut.xmlStringSerializer(doc));
             testXML(expectedDoc, doc);
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
@@ -115,6 +119,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
             Node node = nodeList.item(0);
             MathMLUnificator.replaceNodeWithUnificator(node);
 
+            System.out.println("testReplaceNodeWithUnificator_nonOperator – output:\n" + XMLOut.xmlStringSerializer(doc));
             assertTrue(isDOMEqual(expectedDoc, doc));
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
@@ -140,6 +145,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
             Node node = nodeList.item(0);
             MathMLUnificator.replaceNodeWithUnificator(node);
 
+            System.out.println("testReplaceNodeWithUnificator_operator – output:\n" + XMLOut.xmlStringSerializer(doc));
             assertTrue(isDOMEqual(expectedDoc, doc));
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {

@@ -53,6 +53,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDocFromFilepath() throws Exception {
         Document testedDoc = DOMBuilder.buildDocFromFilepath(getXMLTestResourceAsFilepath(testFile));
+        System.out.println("testBuildDocFromFilepath – doc:\n" + XMLOut.xmlStringSerializer(testedDoc));
         if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }
@@ -61,6 +62,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDoc_String() throws Exception {
         Document testedDoc = DOMBuilder.buildDoc(IOUtils.toString(getXMLTestResource(testFile)));
+        System.out.println("testBuildDoc_String – doc:\n" + XMLOut.xmlStringSerializer(testedDoc));
         if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }
@@ -69,6 +71,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDoc_File() throws Exception {
         Document testedDoc = DOMBuilder.buildDoc(new File(getXMLTestResourceAsFilepath(testFile)));
+        System.out.println("testBuildDoc_File – doc:\n" + XMLOut.xmlStringSerializer(testedDoc));
         if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }
@@ -77,6 +80,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDoc_InputSource() throws Exception {
         Document testedDoc = DOMBuilder.buildDoc(new InputSource(getXMLTestResource(testFile)));
+        System.out.println("testBuildDoc_InputSource – doc:\n" + XMLOut.xmlStringSerializer(testedDoc));
         if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }
@@ -85,6 +89,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDoc_InputStream() throws Exception {
         Document testedDoc = DOMBuilder.buildDoc(getXMLTestResource(testFile));
+        System.out.println("testBuildDoc_InputStream – doc:\n" + XMLOut.xmlStringSerializer(testedDoc));
         if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }

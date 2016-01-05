@@ -15,14 +15,13 @@
  */
 package cz.muni.fi.mir.mathmlunificator;
 
+import cz.muni.fi.mir.mathmlunificator.utils.XMLOut;
 import java.io.IOException;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -61,6 +60,7 @@ public class DocumentParserTest extends AbstractXMLTransformationTest {
     public void findMathMLNodes(DocumentBuilder docBuilder, String testFile, int expectedNumberOfNodes) {
         try {
             Document doc = docBuilder.parse(getTestResource(testFile));
+            System.out.println("findMathMLNodes – doc:\n" + XMLOut.xmlStringSerializer(doc));
             List<Node> nl = DocumentParser.findMathMLNodes(doc);
             assertEquals(expectedNumberOfNodes, nl.size());
         } catch (SAXException | IOException ex) {

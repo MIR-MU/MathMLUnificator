@@ -15,8 +15,8 @@
  */
 package cz.muni.fi.mir.mathmlunificator;
 
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.*;
 
 /**
  * @author Michal Růžička
