@@ -53,7 +53,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDocFromFilepath() throws Exception {
         Document testedDoc = DOMBuilder.buildDocFromFilepath(getXMLTestResourceAsFilepath(testFile));
-        if (isMathMLElementsDOMEqual(doc, testedDoc)) {
+        if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }
     }
@@ -61,7 +61,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDoc_String() throws Exception {
         Document testedDoc = DOMBuilder.buildDoc(IOUtils.toString(getXMLTestResource(testFile)));
-        if (isMathMLElementsDOMEqual(doc, testedDoc)) {
+        if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }
     }
@@ -69,7 +69,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDoc_File() throws Exception {
         Document testedDoc = DOMBuilder.buildDoc(new File(getXMLTestResourceAsFilepath(testFile)));
-        if (isMathMLElementsDOMEqual(doc, testedDoc)) {
+        if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }
     }
@@ -77,7 +77,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDoc_InputSource() throws Exception {
         Document testedDoc = DOMBuilder.buildDoc(new InputSource(getXMLTestResource(testFile)));
-        if (isMathMLElementsDOMEqual(doc, testedDoc)) {
+        if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }
     }
@@ -85,7 +85,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
     @Test
     public void testBuildDoc_InputStream() throws Exception {
         Document testedDoc = DOMBuilder.buildDoc(getXMLTestResource(testFile));
-        if (isMathMLElementsDOMEqual(doc, testedDoc)) {
+        if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");
         }
     }

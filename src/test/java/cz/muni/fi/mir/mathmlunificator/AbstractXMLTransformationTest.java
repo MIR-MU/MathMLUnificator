@@ -82,9 +82,9 @@ public abstract class AbstractXMLTransformationTest {
     }
 
     protected boolean isMathMLElementsDOMEqual(Document templateDoc, Document testedDoc) {
-        return !isDOMEqual(templateDoc, testedDoc)
-                || templateDoc.getElementsByTagNameNS(Constants.MATHML_NS, Constants.MATHML_ROOT_ELEM).getLength()
-                != testedDoc.getElementsByTagNameNS(Constants.MATHML_NS, Constants.MATHML_ROOT_ELEM).getLength();
+        return isDOMEqual(templateDoc, testedDoc)
+                && (templateDoc.getElementsByTagNameNS(Constants.MATHML_NS, Constants.MATHML_ROOT_ELEM).getLength()
+                == testedDoc.getElementsByTagNameNS(Constants.MATHML_NS, Constants.MATHML_ROOT_ELEM).getLength());
     }
 
 }
