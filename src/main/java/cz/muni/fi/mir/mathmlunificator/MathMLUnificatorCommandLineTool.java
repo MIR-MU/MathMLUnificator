@@ -18,9 +18,18 @@ package cz.muni.fi.mir.mathmlunificator;
 import cz.muni.fi.mir.mathmlunificator.utils.DOMBuilder;
 import static cz.muni.fi.mir.mathmlunificator.utils.XMLOut.xmlStdoutSerializer;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -34,6 +43,11 @@ import org.xml.sax.SAXException;
 public class MathMLUnificatorCommandLineTool {
 
     /**
+     * Name of the JARFILE for prints in help.
+     */
+    private static final String JARFILE = "mathml-unificator.jar";
+
+    /**
      * Main (starting) method of the command line application.
      *
      * @param argv Array of command line arguments that are expected to be
@@ -43,27 +57,67 @@ public class MathMLUnificatorCommandLineTool {
      */
     public static void main(String argv[]) throws ParserConfigurationException {
 
-        for (String filepath : argv) {
+        final Options options = new Options();
+        options.addOption("h", "help", false, "print help");
 
-            try {
+        final CommandLineParser parser = new DefaultParser();
+        CommandLine line = null;
+        try {
+            line = parser.parse(options, argv);
+        } catch (ParseException ex) {
+            printHelp(options);
+            System.exit(1);
+        }
 
-                System.out.println("\n###\n### Processing file '" + filepath + "' ###\n###");
-
-                Document doc = DOMBuilder.buildDocFromFilepath(filepath);
-
-                System.out.println("\n## Input document ##");
-                xmlStdoutSerializer(doc);
-
-                MathMLUnificator.unifyMathML(doc);
-
-                System.out.println("\n## Output document ##");
-                xmlStdoutSerializer(doc);
-
-            } catch (SAXException | IOException ex) {
-                Logger.getLogger(MathMLUnificatorCommandLineTool.class.getName()).log(Level.SEVERE, "Failed processing of file: " + filepath, ex);
+        if (line != null) {
+            if (line.hasOption('h')) {
+                printHelp(options);
+                System.exit(0);
             }
 
+            final List<String> arguments = Arrays.asList(line.getArgs());
+            if (arguments.size() > 0) {
+                for (String filepath : arguments) {
+                    try {
+
+                        System.out.println("\n###\n### Processing file '" + filepath + "' ###\n###");
+
+                        Document doc = DOMBuilder.buildDocFromFilepath(filepath);
+
+                        System.out.println("\n## Input document ##");
+                        xmlStdoutSerializer(doc);
+
+                        MathMLUnificator.unifyMathML(doc);
+
+                        System.out.println("\n## Output document ##");
+                        xmlStdoutSerializer(doc);
+
+                    } catch (SAXException | IOException ex) {
+                        Logger.getLogger(MathMLUnificatorCommandLineTool.class
+                                .getName()).log(Level.SEVERE, "Failed processing of file: " + filepath, ex);
+                    }
+                }
+            } else {
+                printHelp(options);
+                System.exit(0);
+            }
         }
+
+    }
+
+    /**
+     * Print summary of command line arguments and usage examples.
+     *
+     * @param options Options recognized by the application.
+     */
+    private static void printHelp(Options options) {
+
+        System.err.println("Usage:");
+        System.err.println("\tjava -jar " + JARFILE + " input.xml [ input.xml ... ]");
+        System.err.println("\tjava -jar " + JARFILE + " -h");
+        System.err.println("Options:");
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printOptions(new PrintWriter(System.err, true), 80, options, 8, 8);
 
     }
 
