@@ -49,10 +49,10 @@ public class DocumentParser {
      * </p>
      * <ol>
      * <li>Find all &lt;math&gt; elements (see
-     * {@link Constants#MATHMLROOTELMNT}) in MathML namespace, i.e. XML
+     * {@link Constants#MATHML_ROOT_ELEM}) in MathML namespace, i.e. XML
      * namespace represented by URI
      * <code>http://www.w3.org/1998/Math/MathML</code> (see
-     * {@link Constants#MATHMLNS}). If at least one element is found, stop
+     * {@link Constants#MATHML_NS}). If at least one element is found, stop
      * futher processing and return collection of links to these nodes.</li>
      * <li>Find any &lt;math&gt; named elements regadless of XML namespaces. If
      * at least one element is found, stop futher processing and return
@@ -68,12 +68,12 @@ public class DocumentParser {
      */
     public static List<Node> findMathMLNodes(Document doc) {
 
-        NodeList mathNodeList = doc.getElementsByTagNameNS(MATHMLNS, MATHMLROOTELMNT);
+        NodeList mathNodeList = doc.getElementsByTagNameNS(MATHML_NS, MATHML_ROOT_ELEM);
         if (mathNodeList.getLength() == 0) {
             // If no math elements are found maybe the input DOM was created as
             // namespace unaware. In this case try to use any math-named element
             // regardless of its namespace.
-            mathNodeList = doc.getElementsByTagName(MATHMLROOTELMNT);
+            mathNodeList = doc.getElementsByTagName(MATHML_ROOT_ELEM);
         }
 
         List mathNodes = new ArrayList(mathNodeList.getLength());

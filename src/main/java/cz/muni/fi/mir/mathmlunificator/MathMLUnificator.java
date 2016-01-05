@@ -75,9 +75,9 @@ public class MathMLUnificator {
      * <p>
      * Resulting series of the original and unified MathML nodes is itself
      * encapsulated in a new element &lt;unified-math&gt; (see
-     * {@link Constants#UNIFIEDMATHROOTELMNT}) in XML namespace
+     * {@link Constants#UNIFIED_MATHML_ROOT_ELEM}) in XML namespace
      * <code>http://mir.fi.muni.cz/mathml-unification/</code> (see
-     * {@link Constants#UNIFIEDMATHNS}).
+     * {@link Constants#UNIFIED_MATHML_NS}).
      * </p>
      *
      * @param doc W3C DOM representation of the XML document to work on.
@@ -103,9 +103,9 @@ public class MathMLUnificator {
      * <p>
      * Resulting series of the original and unified MathML nodes is itself
      * encapsulated in a new element &lt;unified-math&gt; (see
-     * {@link Constants#UNIFIEDMATHROOTELMNT}) in XML namespace
+     * {@link Constants#UNIFIED_MATHML_ROOT_ELEM}) in XML namespace
      * <code>http://mir.fi.muni.cz/mathml-unification/</code> (see
-     * {@link Constants#UNIFIEDMATHNS}).
+     * {@link Constants#UNIFIED_MATHML_NS}).
      * </p>
      * <p>
      * Untouched input will be returned and error logged in case of any error
@@ -145,9 +145,9 @@ public class MathMLUnificator {
      * <p>
      * Resulting series of the original and unified MathML nodes is itself
      * encapsulated in a new element &lt;unified-math&gt; (see
-     * {@link Constants#UNIFIEDMATHROOTELMNT}) in XML namespace
+     * {@link Constants#UNIFIED_MATHML_ROOT_ELEM}) in XML namespace
      * <code>http://mir.fi.muni.cz/mathml-unification/</code> (see
-     * {@link Constants#UNIFIEDMATHNS}).
+     * {@link Constants#UNIFIED_MATHML_NS}).
      * </p>
      *
      * @param mathNode W3C DOM XML document representation attached MathML node
@@ -173,9 +173,9 @@ public class MathMLUnificator {
      * <p>
      * Resulting series of the original and unified MathML nodes is itself
      * encapsulated in a new element &lt;unified-math&gt; (see
-     * {@link Constants#UNIFIEDMATHROOTELMNT}) in XML namespace
+     * {@link Constants#UNIFIED_MATHML_ROOT_ELEM}) in XML namespace
      * <code>http://mir.fi.muni.cz/mathml-unification/</code> (see
-     * {@link Constants#UNIFIEDMATHNS}) and put to the place of the original
+     * {@link Constants#UNIFIED_MATHML_NS}) and put to the place of the original
      * math element {@link Node} in the XML DOM representation the node is
      * attached to.
      * </p>
@@ -184,7 +184,7 @@ public class MathMLUnificator {
 
         nodesByDepth = new HashMap<>();
 
-        Node unifiedMathNode = mathNode.getOwnerDocument().createElementNS(UNIFIEDMATHNS, UNIFIEDMATHROOTELMNT);
+        Node unifiedMathNode = mathNode.getOwnerDocument().createElementNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_ROOT_ELEM);
         mathNode.getParentNode().replaceChild(unifiedMathNode, mathNode);
 
         // New element encapsulating the series of unified formulae.
@@ -246,7 +246,7 @@ public class MathMLUnificator {
             List<Node> nodesOperator = new ArrayList(nodeList.getLength());
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
-                if (node.getNodeName().equals(PMATHMLOPERATOR)) {
+                if (node.getNodeName().equals(PMATHML_OPERATOR)) {
                     nodesOperator.add(node);
                 } else {
                     nodesNonOperator.add(node);
@@ -324,7 +324,7 @@ public class MathMLUnificator {
         if (parentNode == null) {
             throw new IllegalArgumentException("Cannot replace node [" + oldNode + "] that has no parent.");
         } else {
-            String unificatorElementType = oldNode.getNodeName().equals(PMATHMLOPERATOR) ? PMATHMLOPERATOR : PMATHMLIDENTIFIER;
+            String unificatorElementType = oldNode.getNodeName().equals(PMATHML_OPERATOR) ? PMATHML_OPERATOR : PMATHML_IDENTIFIER;
             Node newNode = oldNode.getOwnerDocument().createElementNS(oldNode.getNamespaceURI(), unificatorElementType);
             newNode.setTextContent(UNIFICATOR);
             parentNode.replaceChild(newNode, oldNode);

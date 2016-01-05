@@ -25,29 +25,29 @@ public class Constants {
     /**
      * MathML XML namespace
      */
-    public static final String MATHMLNS = "http://www.w3.org/1998/Math/MathML";
+    public static final String MATHML_NS = "http://www.w3.org/1998/Math/MathML";
     /**
      * MathML XML root element name
      */
-    public static final String MATHMLROOTELMNT = "math";
+    public static final String MATHML_ROOT_ELEM = "math";
 
     /**
      * Presentation MathML operator element name
      */
-    public static final String PMATHMLOPERATOR = "mo";
+    public static final String PMATHML_OPERATOR = "mo";
     /**
      * Presentation MathML identifier element name
      */
-    public static final String PMATHMLIDENTIFIER = "mi";
+    public static final String PMATHML_IDENTIFIER = "mi";
 
     /**
      * MathML Unificator XML markup namespace
      */
-    public static final String UNIFIEDMATHNS = "http://mir.fi.muni.cz/mathml-unification/";
+    public static final String UNIFIED_MATHML_NS = "http://mir.fi.muni.cz/mathml-unification/";
     /**
      * MathML Unificator XML root element name
      */
-    public static final String UNIFIEDMATHROOTELMNT = "unified-math";
+    public static final String UNIFIED_MATHML_ROOT_ELEM = "unified-math";
 
     /**
      * Symbol used in MathML Unificator XML markup for XML tree substitutions

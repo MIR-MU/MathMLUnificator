@@ -15,7 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlunificator;
 
-import static cz.muni.fi.mir.mathmlunificator.config.Constants.MATHMLNS;
+import static cz.muni.fi.mir.mathmlunificator.config.Constants.MATHML_NS;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
@@ -83,7 +83,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
             Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.node-unification"));
             Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("single-formula.node-unification"));
 
-            NodeList nodeList = doc.getElementsByTagNameNS(MATHMLNS, "mfrac");
+            NodeList nodeList = doc.getElementsByTagNameNS(MATHML_NS, "mfrac");
             assertEquals(1, nodeList.getLength());
 
             Node node = nodeList.item(0);
@@ -108,7 +108,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
             Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.non-operator"));
             Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("single-formula.non-operator"));
 
-            NodeList nodeList = doc.getElementsByTagNameNS(MATHMLNS, "msqrt");
+            NodeList nodeList = doc.getElementsByTagNameNS(MATHML_NS, "msqrt");
             assertEquals(1, nodeList.getLength());
 
             Node node = nodeList.item(0);
@@ -133,7 +133,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
             Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.operator"));
             Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("single-formula.operator"));
 
-            NodeList nodeList = doc.getElementsByTagNameNS(MATHMLNS, "mo");
+            NodeList nodeList = doc.getElementsByTagNameNS(MATHML_NS, "mo");
             assertEquals(1, nodeList.getLength());
 
             Node node = nodeList.item(0);
