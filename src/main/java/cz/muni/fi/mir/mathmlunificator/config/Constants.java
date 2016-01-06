@@ -23,52 +23,70 @@ package cz.muni.fi.mir.mathmlunificator.config;
 public class Constants {
 
     /**
-     * MathML XML namespace
+     * MathML XML namespace.
      */
     public static final String MATHML_NS = "http://www.w3.org/1998/Math/MathML";
 
     /**
-     * MathML XML root element name
+     * MathML XML root element name.
      */
     public static final String MATHML_ROOT_ELEM = "math";
 
     /**
-     * Presentation MathML operator element name
+     * Presentation MathML operator element name.
      */
     public static final String PMATHML_OPERATOR = "mo";
 
     /**
-     * Presentation MathML identifier element name
+     * Presentation MathML identifier element name.
      */
     public static final String PMATHML_IDENTIFIER = "mi";
 
     /**
-     * MathML Unificator XML markup namespace
+     * MathML Unificator XML markup namespace.
      */
     public static final String UNIFIED_MATHML_NS = "http://mir.fi.muni.cz/mathml-unification/";
 
     /**
-     * MathML Unificator XML markup namespace prefix
+     * MathML Unificator XML markup namespace prefix.
      */
     public static final String UNIFIED_MATHML_NS_PREFIX = "uni";
 
     /**
-     * MathML Unificator XML root element name
+     * MathML Unificator XML root element name for batch processing output.
+     * documents
+     */
+    public static final String UNIFIED_MATHML_BATCH_OUTPUT_ROOT_ELEM = "unified-math-batch";
+
+    /**
+     * MathML Unificator XML item element name for batch processing output.
+     * documents
+     */
+    public static final String UNIFIED_MATHML_BATCH_OUTPUT_ITEM_ELEM = "unified-math-batch-item";
+
+    /**
+     * MathML Unificator XML name of input file attribute for batch processing
+     * output item.
+     */
+    public static final String UNIFIED_MATHML_BATCH_OUTPUT_ITEM_FILEPATH_ATTR = "input-file";
+
+    /**
+     * MathML Unificator XML root element name.
      */
     public static final String UNIFIED_MATHML_ROOT_ELEM = "unified-math";
 
     /**
-     * MathML Unification current unification level XML attribute
+     * MathML Unification current unification level XML attribute.
      */
     public static final String UNIFIED_MATHML_LEVEL_ATTR = "unification-level";
 
     /**
-     * MathML Unification number of unification levels XML attribute
+     * MathML Unification number of unification levels XML attribute.
      */
     public static final String UNIFIED_MATHML_MAX_LEVEL_ATTR = "unification-max-level";
 
     /**
-     * Symbol used in MathML Unificator XML markup for XML tree substitutions
+     * Symbol used in MathML Unificator XML markup for XML tree substitutions.
      */
     public static final String UNIFICATOR = "\u25CD";
 

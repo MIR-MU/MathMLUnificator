@@ -40,10 +40,9 @@ public class MathMLUnificatorCommandLineToolTest extends AbstractXMLTransformati
         System.setOut(stdout);
 
         String output = stdoutContent.toString();
-        output = output.replaceAll("(### Processing file ').*(' ###)", "$1PATH REMOVED$2");
 
         System.out.println("testMain – output:\n" + output);
-        assertEquals(IOUtils.toString(getTestResource(testFile + ".expected-output.txt")), output);
+        assertEquals(IOUtils.toString(getExpectedXMLTestResource(testFile)), output);
 
     }
 

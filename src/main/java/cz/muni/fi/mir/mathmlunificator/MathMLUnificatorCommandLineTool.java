@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlunificator;
 
+import static cz.muni.fi.mir.mathmlunificator.config.Constants.*;
 import cz.muni.fi.mir.mathmlunificator.utils.DOMBuilder;
 import static cz.muni.fi.mir.mathmlunificator.utils.XMLOut.xmlStdoutSerializer;
 import java.io.IOException;
@@ -30,7 +31,10 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
@@ -77,26 +81,39 @@ public class MathMLUnificatorCommandLineTool {
 
             final List<String> arguments = Arrays.asList(line.getArgs());
             if (arguments.size() > 0) {
+
+                Document outerDocument = DOMBuilder.getDocumentBuilder().newDocument();
+                Node rootNode = outerDocument.createElementNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_NS_PREFIX + ":" + UNIFIED_MATHML_BATCH_OUTPUT_ROOT_ELEM);
+                outerDocument.appendChild(rootNode);
+
                 for (String filepath : arguments) {
                     try {
 
-                        System.out.println("\n###\n### Processing file '" + filepath + "' ###\n###");
-
                         Document doc = DOMBuilder.buildDocFromFilepath(filepath);
-
-                        System.out.println("\n## Input document ##");
-                        xmlStdoutSerializer(doc);
-
                         MathMLUnificator.unifyMathML(doc);
-
-                        System.out.println("\n## Output document ##");
-                        xmlStdoutSerializer(doc);
+                        if (arguments.size() == 1) {
+                            xmlStdoutSerializer(doc);
+                        } else {
+                            Node itemNode = rootNode.getOwnerDocument()
+                                    .createElementNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_NS_PREFIX + ":" + UNIFIED_MATHML_BATCH_OUTPUT_ITEM_ELEM);
+                            Attr filenameAttr = itemNode.getOwnerDocument()
+                                    .createAttributeNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_NS_PREFIX + ":" + UNIFIED_MATHML_BATCH_OUTPUT_ITEM_FILEPATH_ATTR);
+                            filenameAttr.setTextContent(String.valueOf(filepath));
+                            ((Element) itemNode).setAttributeNodeNS(filenameAttr);
+                            itemNode.appendChild(rootNode.getOwnerDocument().importNode(doc.getDocumentElement(), true));
+                            rootNode.appendChild(itemNode);
+                        }
 
                     } catch (SAXException | IOException ex) {
                         Logger.getLogger(MathMLUnificatorCommandLineTool.class
                                 .getName()).log(Level.SEVERE, "Failed processing of file: " + filepath, ex);
                     }
                 }
+
+                if (rootNode.getChildNodes().getLength() > 0) {
+                    xmlStdoutSerializer(rootNode.getOwnerDocument());
+                }
+
             } else {
                 printHelp(options);
                 System.exit(0);

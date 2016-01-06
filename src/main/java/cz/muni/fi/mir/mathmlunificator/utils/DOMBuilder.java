@@ -44,12 +44,7 @@ public class DOMBuilder {
      * @throws IOException If any IO errors occur.
      */
     public static Document buildDocFromFilepath(String filepath) throws ParserConfigurationException, SAXException, IOException {
-
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        docFactory.setNamespaceAware(true);
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        return docBuilder.parse(filepath);
-
+        return getDocumentBuilder().parse(filepath);
     }
 
     /**
@@ -63,12 +58,7 @@ public class DOMBuilder {
      * @throws IOException If any IO errors occur.
      */
     public static Document buildDoc(String doc) throws ParserConfigurationException, SAXException, IOException {
-
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        docFactory.setNamespaceAware(true);
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        return docBuilder.parse(IOUtils.toInputStream(doc));
-
+        return getDocumentBuilder().parse(IOUtils.toInputStream(doc));
     }
 
     /**
@@ -82,12 +72,7 @@ public class DOMBuilder {
      * @throws IOException If any IO errors occur.
      */
     public static Document buildDoc(File file) throws ParserConfigurationException, SAXException, IOException {
-
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        docFactory.setNamespaceAware(true);
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        return docBuilder.parse(file);
-
+        return getDocumentBuilder().parse(file);
     }
 
     /**
@@ -102,12 +87,7 @@ public class DOMBuilder {
      * @throws IOException If any IO errors occur.
      */
     public static Document buildDoc(InputSource is) throws ParserConfigurationException, SAXException, IOException {
-
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        docFactory.setNamespaceAware(true);
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        return docBuilder.parse(is);
-
+        return getDocumentBuilder().parse(is);
     }
 
     /**
@@ -122,11 +102,31 @@ public class DOMBuilder {
      * @throws IOException If any IO errors occur.
      */
     public static Document buildDoc(InputStream is) throws ParserConfigurationException, SAXException, IOException {
+        return getDocumentBuilder().parse(is);
+    }
+
+    /**
+     * Create new empty document.
+     *
+     * @return New empty W3C DOM document.
+     * @throws ParserConfigurationException
+     */
+    public static Document createEmptyDoc() throws ParserConfigurationException {
+        return getDocumentBuilder().newDocument();
+    }
+
+    /**
+     * Get W3C DOM document builder with common configuration set: most
+     * importantly build is set to be namesapace aware.
+     *
+     * @return W3C DOM document builder with common configuration.
+     * @throws ParserConfigurationException
+     */
+    public static DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setNamespaceAware(true);
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        return docBuilder.parse(is);
+        return docFactory.newDocumentBuilder();
 
     }
 

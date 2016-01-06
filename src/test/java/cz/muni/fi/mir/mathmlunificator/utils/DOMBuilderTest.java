@@ -95,4 +95,11 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
         }
     }
 
+    @Test
+    public void getDocumentBuilder() throws ParserConfigurationException {
+        DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
+        assertNotNull(docBuilder);
+        assertTrue(docBuilder.isNamespaceAware());
+    }
+
 }

@@ -16,11 +16,11 @@
 package cz.muni.fi.mir.mathmlunificator;
 
 import static cz.muni.fi.mir.mathmlunificator.config.Constants.MATHML_NS;
+import cz.muni.fi.mir.mathmlunificator.utils.DOMBuilder;
 import cz.muni.fi.mir.mathmlunificator.utils.XMLOut;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -38,9 +38,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
     public void testUnifyMathML_Document() {
         try {
 
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            docFactory.setNamespaceAware(true);
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
             Document doc = docBuilder.parse(getInputXMLTestResource("multiple-formulae.document-unification"));
             Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("multiple-formulae.document-unification"));
 
@@ -59,9 +57,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
         try {
 
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            docFactory.setNamespaceAware(true);
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
             Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("multiple-formulae.document-unification"));
 
             ByteArrayOutputStream osDoc = new ByteArrayOutputStream();
@@ -81,9 +77,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
     public void testUnifyMathMLNode() {
         try {
 
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            docFactory.setNamespaceAware(true);
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
             Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.node-unification"));
             Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("single-formula.node-unification"));
 
@@ -107,9 +101,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
         try {
 
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            docFactory.setNamespaceAware(true);
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
             Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.non-operator"));
             Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("single-formula.non-operator"));
 
@@ -133,9 +125,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
         try {
 
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            docFactory.setNamespaceAware(true);
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
             Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.operator"));
             Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("single-formula.operator"));
 
