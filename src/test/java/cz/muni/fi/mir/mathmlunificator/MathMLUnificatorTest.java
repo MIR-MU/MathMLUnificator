@@ -66,7 +66,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
             ByteArrayOutputStream osDoc = new ByteArrayOutputStream();
             MathMLUnificator.unifyMathML(getInputXMLTestResource("multiple-formulae.document-unification"), osDoc);
-            String doc = osDoc.toString("UTF-8");
+            String doc = osDoc.toString();
 
             System.out.println("testUnifyMathML_InputStream_OutputStream – output:\n" + doc);
             testXML(expectedDoc, doc);
