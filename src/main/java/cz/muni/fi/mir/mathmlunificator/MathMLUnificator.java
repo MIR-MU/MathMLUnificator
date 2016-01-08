@@ -165,6 +165,26 @@ public class MathMLUnificator {
 
     /**
      * <p>
+     * Transforms the given MathML {@link Node} for series of MathML formulae
+     * with leaf elements substituted gradually for a special unification
+     * representing symbol <code>&#x25CD;</code> (see
+     * {@link Constants#UNIFICATOR}).
+     * </p>
+     *
+     * @param mathNode W3C DOM XML document representation attached MathML node
+     * to work on.
+     * @return Collection of unified versions of the <code>mathNode</code> with
+     * key of the {@link HashMap} describing order (level of unification) of
+     * elements in the collection.
+     */
+    public static HashMap<Integer, Node> getUnifiedMathMLNodes(Node mathNode) {
+
+        return new MathMLUnificator().unifyMathMLNodeImpl(mathNode, false);
+
+    }
+
+    /**
+     * <p>
      * Implementation of MathML unification. In the given W3C DOM represented
      * XML document find all maths nodes (see
      * {@link DocumentParser#findMathMLNodes(org.w3c.dom.Document)}) and
@@ -183,27 +203,87 @@ public class MathMLUnificator {
      * math element {@link Node} in the XML DOM representation the node is
      * attached to.
      * </p>
+     *
+     * @param mathNode W3C DOM XML document representation attached MathML node
+     * to work on.
      */
     private void unifyMathMLNodeImpl(Node mathNode) {
 
+        unifyMathMLNodeImpl(mathNode, true);
+
+    }
+
+    /**
+     * <p>
+     * Implementation of MathML unification. In the given W3C DOM represented
+     * XML document find all maths nodes (see
+     * {@link DocumentParser#findMathMLNodes(org.w3c.dom.Document)}) and
+     * remember links to operator elements and other elements in
+     * {@link #nodesByDepth} data structure. Then substitute them gradualy for
+     * series of formulae with leaf elements substituted for a special
+     * unification representing symbol <code>&#x25CD;</code> (see
+     * {@link Constants#UNIFICATOR}).
+     * </p>
+     * <p>
+     * Resulting series of the original and unified MathML nodes is itself
+     * encapsulated in a new element &lt;unified-math&gt; (see
+     * {@link Constants#UNIFIED_MATHML_ROOT_ELEM}) in XML namespace
+     * <code>http://mir.fi.muni.cz/mathml-unification/</code> (see
+     * {@link Constants#UNIFIED_MATHML_NS}) and put to the place of the original
+     * math element {@link Node} in the XML DOM representation the node is
+     * attached to.
+     * </p>
+     *
+     * @param mathNode W3C DOM XML document representation attached MathML node
+     * to work on.
+     * @param workInPlace If <code>true</code>, given <code>mathNode</code> will
+     * be modified in place; if <code>false</code>, <code>mathNode</code> will
+     * not be modified and series of modified nodes will be returned.
+     * @return <code>null</code> if <code>workInPlace</code> is
+     * <code>false</code>; otherwise collection of unified versions of the
+     * <code>mathNode</code> with key of the {@link HashMap} describing order
+     * (level of unification) of elements in the collection.
+     */
+    private HashMap<Integer, Node> unifyMathMLNodeImpl(Node mathNode, boolean workInPlace) {
+
+        if (mathNode.getOwnerDocument() == null) {
+            String msg = "The given node is not attached to any document.";
+            if (mathNode.getNodeType() == Node.DOCUMENT_NODE) {
+                msg = "The given node is document itself. Call with mathNode.getDocumentElement() instead.";
+            }
+            throw new IllegalArgumentException(msg);
+        }
+
         nodesByDepth = new HashMap<>();
 
-        Node unifiedMathNode = mathNode.getOwnerDocument().createElementNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_ROOT_ELEM);
-        mathNode.getParentNode().replaceChild(unifiedMathNode, mathNode);
+        Node unifiedMathNode = null;
+        HashMap<Integer, Node> unifiedNodesList = null;
+        Document unifiedMathDoc = null;
 
-        // New element encapsulating the series of unified formulae.
-        unifiedMathNode.appendChild(mathNode.cloneNode(true));
+        if (workInPlace) {
+            // New element encapsulating the series of unified formulae.
+            unifiedMathNode = mathNode.getOwnerDocument().createElementNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_ROOT_ELEM);
+            mathNode.getParentNode().replaceChild(unifiedMathNode, mathNode);
+            unifiedMathNode.appendChild(mathNode.cloneNode(true));
+        } else {
+            unifiedNodesList = new HashMap<>();
+            // Create a new separate DOM to work over with imporeted clone of the node given by user
+            unifiedMathDoc = DOMBuilder.createNewDocWithNodeClone(mathNode, true);
+            unifiedMathDoc.getFirstChild().setPrefix("m");
+        }
 
         // Parse XML subtree starting at mathNode and remember elements by their depth.
         rememberLevelsOfNodes(mathNode);
 
         // Build series of formulae of level by level unified MathML.
         NodeLevel<Integer, Integer> level = new NodeLevel<>(getMaxMajorNodesLevel(), NUMOFMINORLEVELS);
-        int levelAttrCounter = 1;
+        int levelAttrCounter = 0;
         Collection<Attr> maxLevelAttrs = new LinkedList<>();
         while (level.major > 0) {
             if (nodesByDepth.containsKey(level)) {
                 if (unifyAtLevel(level)) {
+                    levelAttrCounter++;
+
                     Node thisLevelMathNode = mathNode.cloneNode(true);
                     Attr thisLevelAttr = thisLevelMathNode.getOwnerDocument()
                             .createAttributeNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_NS_PREFIX + ":" + UNIFIED_MATHML_LEVEL_ATTR);
@@ -211,12 +291,17 @@ public class MathMLUnificator {
                             .createAttributeNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_NS_PREFIX + ":" + UNIFIED_MATHML_MAX_LEVEL_ATTR);
                     maxLevelAttrs.add(maxLevelAttr);
 
-                    thisLevelAttr.setTextContent(String.valueOf(levelAttrCounter++));
+                    thisLevelAttr.setTextContent(String.valueOf(levelAttrCounter));
 
                     ((Element) thisLevelMathNode).setAttributeNodeNS(thisLevelAttr);
                     ((Element) thisLevelMathNode).setAttributeNodeNS(maxLevelAttr);
 
-                    unifiedMathNode.appendChild(thisLevelMathNode);
+                    if (workInPlace) {
+                        unifiedMathNode.appendChild(thisLevelMathNode);
+                    } else {
+                        // Create a new document for every node in the collection.
+                        unifiedNodesList.put(levelAttrCounter, DOMBuilder.cloneNodeToNewDoc(thisLevelMathNode, true));
+                    }
                 }
             }
             level.minor--;
@@ -226,8 +311,21 @@ public class MathMLUnificator {
             }
         }
         for (Attr attr : maxLevelAttrs) {
-            attr.setTextContent(String.valueOf((levelAttrCounter - 1)));
+            attr.setTextContent(String.valueOf((levelAttrCounter)));
         }
+
+        if (workInPlace) {
+            return null;
+        } else {
+            for (Node node : unifiedNodesList.values()) {
+                Attr maxLevelAttr = (Attr) node.getAttributes().getNamedItemNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_MAX_LEVEL_ATTR);
+                if (maxLevelAttr != null) {
+                    maxLevelAttr.setTextContent(String.valueOf((levelAttrCounter)));
+                }
+            }
+            return unifiedNodesList;
+        }
+
     }
 
     /**

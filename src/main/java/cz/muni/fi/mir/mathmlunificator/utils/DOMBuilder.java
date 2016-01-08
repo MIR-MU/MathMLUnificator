@@ -23,6 +23,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -108,11 +109,51 @@ public class DOMBuilder {
     /**
      * Create new empty document.
      *
-     * @return New empty W3C DOM document.
-     * @throws ParserConfigurationException
+     * @return New empty W3C DOM document if successful; <code>null</code>
+     * otherwise.
      */
-    public static Document createEmptyDoc() throws ParserConfigurationException {
-        return getDocumentBuilder().newDocument();
+    public static Document createEmptyDoc() {
+        try {
+            return getDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Create new W3C DOM document with only child node created as the clone of
+     * the given node (detached from the DOM of the source node).
+     *
+     * @param nodeToClone Node to clone as the only child node of the new
+     * document.
+     * @param deep If true, recursively clone the subtree under the given node;
+     * if false, clone only the node itself (and its attributes, if it is an
+     * Element).
+     * @return New W3C DOM document with the only child node created as the
+     * clone of the given node (detached from the DOM of the source node).
+     */
+    public static Document createNewDocWithNodeClone(Node nodeToClone, boolean deep) {
+        Document newDoc = DOMBuilder.createEmptyDoc();
+        nodeToClone = newDoc.adoptNode(nodeToClone.cloneNode(deep));
+        newDoc.appendChild(nodeToClone);
+        return newDoc;
+    }
+
+    /**
+     * Create new W3C DOM document with only child node created as the clone of
+     * the given node (detached from the DOM of the source node) and return the
+     * cloned node attached to the new document.
+     *
+     * @param nodeToClone Node to clone as the only child node of the new
+     * document.
+     * @param deep If true, recursively clone the subtree under the given node;
+     * if false, clone only the node itself (and its attributes, if it is an
+     * Element).
+     * @return Clone of the given node attached as the only child node to a new
+     * W3C DOM document.
+     */
+    public static Node cloneNodeToNewDoc(Node nodeToClone, boolean deep) {
+        return DOMBuilder.createNewDocWithNodeClone(nodeToClone, deep).getDocumentElement();
     }
 
     /**
@@ -123,11 +164,9 @@ public class DOMBuilder {
      * @throws ParserConfigurationException
      */
     public static DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
-
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setNamespaceAware(true);
         return docFactory.newDocumentBuilder();
-
     }
 
 }

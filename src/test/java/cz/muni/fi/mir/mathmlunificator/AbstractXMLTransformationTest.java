@@ -62,19 +62,36 @@ public abstract class AbstractXMLTransformationTest {
     }
 
     protected void testXML(String expectedXMLDoc, String testedXMLDoc) throws ParserConfigurationException, SAXException, IOException {
+        testXML(null, expectedXMLDoc, testedXMLDoc);
+    }
+
+    protected void testXML(String msg, String expectedXMLDoc, String testedXMLDoc) throws ParserConfigurationException, SAXException, IOException {
         Document testedDoc = DOMBuilder.buildDoc(testedXMLDoc);
         Document expectedDoc = DOMBuilder.buildDoc(getExpectedXMLTestResource(expectedXMLDoc));
-        testXML(expectedDoc, testedDoc);
+        testXML(null, expectedDoc, testedDoc);
     }
 
     protected void testXML(Document expectedDoc, String testedXMLDoc) throws ParserConfigurationException, SAXException, IOException {
+        testXML(null, expectedDoc, testedXMLDoc);
+    }
+
+    protected void testXML(String msg, Document expectedDoc, String testedXMLDoc) throws ParserConfigurationException, SAXException, IOException {
         Document testedDoc = DOMBuilder.buildDoc(testedXMLDoc);
-        testXML(expectedDoc, testedDoc);
+        testXML(null, expectedDoc, testedDoc);
     }
 
     protected void testXML(Document expectedDoc, Document testedDoc) {
-        new XMLTestCase() {
-        }.assertXMLEqual(expectedDoc, testedDoc);
+        testXML(null, expectedDoc, testedDoc);
+    }
+
+    protected void testXML(String msg, Document expectedDoc, Document testedDoc) {
+        if (msg == null) {
+            new XMLTestCase() {
+            }.assertXMLEqual(expectedDoc, testedDoc);
+        } else {
+            new XMLTestCase() {
+            }.assertXMLEqual(msg, expectedDoc, testedDoc);
+        }
     }
 
     protected boolean isDOMEqual(Document templateDoc, Document testedDoc) {

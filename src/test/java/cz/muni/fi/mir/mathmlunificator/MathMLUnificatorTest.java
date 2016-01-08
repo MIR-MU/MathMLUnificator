@@ -20,6 +20,7 @@ import cz.muni.fi.mir.mathmlunificator.utils.DOMBuilder;
 import cz.muni.fi.mir.mathmlunificator.utils.XMLOut;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import static org.junit.Assert.*;
@@ -89,6 +90,82 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
             System.out.println("testUnifyMathMLNode – output:\n" + XMLOut.xmlStringSerializer(doc));
             testXML(expectedDoc, doc);
+
+        } catch (SAXException | IOException | ParserConfigurationException ex) {
+            fail(ex.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testGetUnifiedMathMLNodes() {
+
+        try {
+
+            // Expected collection
+            HashMap<Integer, Node> expectedNodeList = new HashMap<>(4);
+            Document node1 = DOMBuilder.buildDoc(
+                    "<math xmlns:uni=\"http://mir.fi.muni.cz/mathml-unification/\"\n"
+                    + "    uni:unification-level=\"1\" uni:unification-max-level=\"4\" xmlns=\"http://www.w3.org/1998/Math/MathML\">\n"
+                    + "    <msup>\n"
+                    + "        <mi>a</mi>\n"
+                    + "        <mn>2</mn>\n"
+                    + "    </msup>\n"
+                    + "    <mo>+</mo>\n"
+                    + "    <mfrac>\n"
+                    + "        <msqrt>\n"
+                    + "            <mi>◍</mi>\n"
+                    + "        </msqrt>\n"
+                    + "        <mi>c</mi>\n"
+                    + "    </mfrac>\n"
+                    + "</math>");
+            expectedNodeList.put(1, node1.getDocumentElement());
+            Document node2 = DOMBuilder.buildDoc(
+                    "<math xmlns:uni=\"http://mir.fi.muni.cz/mathml-unification/\"\n"
+                    + "    uni:unification-level=\"2\" uni:unification-max-level=\"4\" xmlns=\"http://www.w3.org/1998/Math/MathML\">\n"
+                    + "    <msup>\n"
+                    + "        <mi>◍</mi>\n"
+                    + "        <mi>◍</mi>\n"
+                    + "    </msup>\n"
+                    + "    <mo>+</mo>\n"
+                    + "    <mfrac>\n"
+                    + "        <mi>◍</mi>\n"
+                    + "        <mi>◍</mi>\n"
+                    + "    </mfrac>\n"
+                    + "</math>");
+            expectedNodeList.put(2, node2.getDocumentElement());
+            Document node3 = DOMBuilder.buildDoc(
+                    "<math xmlns:uni=\"http://mir.fi.muni.cz/mathml-unification/\"\n"
+                    + "    uni:unification-level=\"3\" uni:unification-max-level=\"4\" xmlns=\"http://www.w3.org/1998/Math/MathML\">\n"
+                    + "    <mi>◍</mi>\n"
+                    + "    <mo>+</mo>\n"
+                    + "    <mi>◍</mi>\n"
+                    + "</math>");
+            expectedNodeList.put(3, node3.getDocumentElement());
+            Document node4 = DOMBuilder.buildDoc(
+                    "<math xmlns:uni=\"http://mir.fi.muni.cz/mathml-unification/\"\n"
+                    + "    uni:unification-level=\"4\" uni:unification-max-level=\"4\" xmlns=\"http://www.w3.org/1998/Math/MathML\">\n"
+                    + "    <mi>◍</mi>\n"
+                    + "    <mo>◍</mo>\n"
+                    + "    <mi>◍</mi>\n"
+                    + "</math>");
+            expectedNodeList.put(4, node4.getDocumentElement());
+
+            // Produced collection
+            DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
+            Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.node-unification"));
+            HashMap<Integer, Node> docNodeList = MathMLUnificator.getUnifiedMathMLNodes(doc.getDocumentElement());
+
+            System.out.println("testGetUnifyMathMLNodes – output:");
+            for (Node n : docNodeList.values()) {
+                XMLOut.xmlStdoutSerializer(n.getOwnerDocument());
+            }
+
+            assertEquals(expectedNodeList.keySet(), docNodeList.keySet());
+            for (Integer i : expectedNodeList.keySet()) {
+                testXML("Different unification at level " + Integer.toString(i), expectedNodeList.get(i).getOwnerDocument(), docNodeList.get(i).getOwnerDocument());
+            }
+            //assertTrue(docNodeList.equals(expectedNodeList));
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             fail(ex.getMessage());
