@@ -471,4 +471,65 @@ public class MathMLUnificator {
 
     }
 
+    /**
+     * <p>
+     * Test whether the given node is unified math node. The node is considered
+     * to be unified math node if
+     * </p>
+     * <ol>
+     * <li>the node is not <code>null</code>,</li>
+     * <li>the node is math node,</li>
+     * <li>the node has current unification level attribute (see
+     * {@link Constants#UNIFIED_MATHML_LEVEL_ATTR}) in MathML Unification XML
+     * namespace (see {@link Constants#UNIFIED_MATHML_NS}) with valid value,
+     * i.e. integer greather than 0.</li>
+     * </ol>
+     * <p>
+     * The method is XML namespace aware and expects the node DOM to be build as
+     * XML aware (see
+     * {@link javax.xml.parsers.DocumentBuilderFactory#setNamespaceAware(boolean)}).
+     * </p>
+     * <p>
+     * In case the input DOM was created as namespace unaware or the input XML
+     * document does not correctly use namespaces the method tries to fall back
+     * to element-plain-name-only math node detection. The element is considered
+     * to be math element it the local name of the element is &lt;math&gt; (see
+     * {@link Constants#UNIFIED_MATHML_ROOT_ELEM}) without any namespace
+     * definition or in the MathML namespace XML namespace
+     * <code>http://www.w3.org/1998/Math/MathML</code> (see
+     * {@link Constants#MATHML_NS}).
+     * </p>
+     *
+     * @param node The node to test.
+     * @return <code>true</code> if the above description is fulfilled,
+     * <code>false</code> otherwise.
+     */
+    public static boolean isUnifiedMathNode(Node node) {
+
+        // Test the nodes is element
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+            // Test the node is math node in MathML namesapce or at least with corrent name if no namesapce is defined at all
+            if ((node.getNamespaceURI() == null || node.getNamespaceURI().equals(MATHML_NS))
+                    && node.getNodeName().equals(MATHML_ROOT_ELEM)) {
+                // Test presence of unification level attribute
+                Node uniLevel = node.getAttributes().getNamedItemNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_LEVEL_ATTR);
+                if (uniLevel != null && uniLevel.getNodeType() == Node.ATTRIBUTE_NODE) {
+                    Integer value;
+                    try {
+                        value = Integer.parseInt(((Attr) uniLevel).getTextContent());
+                    } catch (NumberFormatException ex) {
+                        return false;
+                    }
+                    if (value >= 0) {
+                        return true;
+                    }
+                }
+
+            }
+        }
+
+        return false;
+
+    }
+
 }

@@ -221,4 +221,53 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
     }
 
+    @Test
+    public void testIsUnifiedMathNode() {
+
+        try {
+
+            Node node = null;
+
+            node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("is-unified-math-nodes.case-1")).getDocumentElement();
+            assertNotNull(node);
+            assertFalse("Namespaced math node without unification level attribute is not unified",
+                    MathMLUnificator.isUnifiedMathNode(node));
+
+            node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("is-unified-math-nodes.case-2")).getDocumentElement();
+            assertNotNull(node);
+            assertFalse("Not-namespaced math node without unification level attribute is not unified",
+                    MathMLUnificator.isUnifiedMathNode(node));
+
+            node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("is-unified-math-nodes.case-3")).getDocumentElement();
+            assertNotNull(node);
+            assertFalse("Not-math node is not unfified",
+                    MathMLUnificator.isUnifiedMathNode(node));
+
+            node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("is-unified-math-nodes.case-4")).getDocumentElement();
+            assertNotNull(node);
+            assertTrue("Namespaced math node with unification level attribute is unified",
+                    MathMLUnificator.isUnifiedMathNode(node));
+
+            node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("is-unified-math-nodes.case-5")).getDocumentElement();
+            assertNotNull(node);
+            assertTrue("Namespaced math node with unification level attribute is unified",
+                    MathMLUnificator.isUnifiedMathNode(node));
+
+            node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("is-unified-math-nodes.case-6")).getDocumentElement();
+            assertNotNull(node);
+            assertFalse("Namespaced math node with not-a-number unification level attribute is not unified",
+                    MathMLUnificator.isUnifiedMathNode(node));
+
+        } catch (SAXException | IOException | ParserConfigurationException ex) {
+            fail(ex.getMessage());
+        }
+
+    }
+
 }
