@@ -18,6 +18,7 @@ package cz.muni.fi.mir.mathmlunificator.utils;
 import cz.muni.fi.mir.mathmlunificator.AbstractXMLTransformationTest;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,8 +40,10 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
 
     private Document doc = null;
 
+    @Override
     @Before
     public void setUp() throws ParserConfigurationException, SAXException, IOException {
+        super.setUp();
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setNamespaceAware(true);
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -63,7 +66,7 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
 
     @Test
     public void testBuildDoc_String() throws Exception {
-        Document testedDoc = DOMBuilder.buildDoc(IOUtils.toString(getXMLTestResource(testFile)));
+        Document testedDoc = DOMBuilder.buildDoc(IOUtils.toString(getXMLTestResource(testFile), StandardCharsets.UTF_8));
         System.out.println("testBuildDoc_String – doc:\n" + XMLOut.xmlStringSerializer(testedDoc));
         if (!isMathMLElementsDOMEqual(doc, testedDoc)) {
             fail("Produced W3C DOM is not equivalent to the expected W3C DOM.");

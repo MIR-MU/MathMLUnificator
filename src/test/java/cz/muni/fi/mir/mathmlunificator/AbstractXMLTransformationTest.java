@@ -19,8 +19,12 @@ import cz.muni.fi.mir.mathmlunificator.config.Constants;
 import cz.muni.fi.mir.mathmlunificator.utils.DOMBuilder;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.ParserConfigurationException;
-import org.custommonkey.xmlunit.XMLTestCase;
+import org.apache.commons.io.input.ReaderInputStream;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.*;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -34,6 +38,11 @@ import org.xml.sax.SAXException;
  */
 @Ignore // no tests
 public abstract class AbstractXMLTransformationTest {
+
+    @Before
+    public void setUp() throws ParserConfigurationException, SAXException, IOException {
+        XMLUnit.setIgnoreWhitespace(true);
+    }
 
     protected InputStream getInputXMLTestResource(String testFile) {
         return getXMLTestResource(testFile + ".input");
@@ -53,7 +62,8 @@ public abstract class AbstractXMLTransformationTest {
 
     protected InputStream getTestResource(String testFile) {
         String resourceFile = this.getClass().getSimpleName() + "/" + testFile;
-        return this.getClass().getResourceAsStream(resourceFile);
+        InputStream rs = this.getClass().getResourceAsStream(resourceFile);
+        return new ReaderInputStream(new InputStreamReader(rs, StandardCharsets.UTF_8), StandardCharsets.UTF_8);
     }
 
     protected String getTestResourceAsFilepath(String testFile) {
@@ -86,11 +96,9 @@ public abstract class AbstractXMLTransformationTest {
 
     protected void testXML(String msg, Document expectedDoc, Document testedDoc) {
         if (msg == null) {
-            new XMLTestCase() {
-            }.assertXMLEqual(expectedDoc, testedDoc);
+            XMLAssert.assertXMLEqual(expectedDoc, testedDoc);
         } else {
-            new XMLTestCase() {
-            }.assertXMLEqual(msg, expectedDoc, testedDoc);
+            XMLAssert.assertXMLEqual(msg, expectedDoc, testedDoc);
         }
     }
 

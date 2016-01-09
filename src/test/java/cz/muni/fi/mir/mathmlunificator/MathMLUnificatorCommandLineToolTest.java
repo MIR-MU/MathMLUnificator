@@ -17,6 +17,7 @@ package cz.muni.fi.mir.mathmlunificator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -39,10 +40,10 @@ public class MathMLUnificatorCommandLineToolTest extends AbstractXMLTransformati
         MathMLUnificatorCommandLineTool.main(argv);
         System.setOut(stdout);
 
-        String output = stdoutContent.toString();
+        String output = stdoutContent.toString(StandardCharsets.UTF_8.toString());
 
         System.out.println("testMain – output:\n" + output);
-        assertEquals(IOUtils.toString(getExpectedXMLTestResource(testFile)), output);
+        assertEquals(IOUtils.toString(getExpectedXMLTestResource(testFile), StandardCharsets.UTF_8), output);
 
     }
 

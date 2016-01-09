@@ -35,8 +35,10 @@ public class DocumentParserTest extends AbstractXMLTransformationTest {
     private static DocumentBuilder docBuilderNSAware = null;
     private static DocumentBuilder docBuilderNSUnaware = null;
 
+    @Override
     @Before
     public void setUp() throws ParserConfigurationException, SAXException, IOException {
+        super.setUp();
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setNamespaceAware(true);
         docBuilderNSAware = docFactory.newDocumentBuilder();

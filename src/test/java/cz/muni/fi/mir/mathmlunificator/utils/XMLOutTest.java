@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import javax.xml.parsers.ParserConfigurationException;
-import org.custommonkey.xmlunit.XMLUnit;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.w3c.dom.Document;
@@ -33,11 +32,6 @@ import org.xml.sax.SAXException;
 public class XMLOutTest extends AbstractXMLTransformationTest {
 
     private static final String testFile = "multiple-formulae";
-
-    @Before
-    public void setUp() {
-        XMLUnit.setIgnoreWhitespace(true);
-    }
 
     @Test
     public void testXmlSerializer() {

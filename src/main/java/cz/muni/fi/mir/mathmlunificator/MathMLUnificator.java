@@ -126,10 +126,10 @@ public class MathMLUnificator {
      */
     public static void unifyMathML(InputStream is, OutputStream os) throws IOException {
 
-        String originalDoc = IOUtils.toString(is, "UTF-8");
+        String originalDoc = IOUtils.toString(is);
 
         try {
-            Document doc = DOMBuilder.buildDoc(new ByteArrayInputStream(originalDoc.getBytes("UTF-8")));
+            Document doc = DOMBuilder.buildDoc(new ByteArrayInputStream(originalDoc.getBytes()));
             unifyMathML(doc);
             XMLOut.xmlSerializer(doc, os);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
