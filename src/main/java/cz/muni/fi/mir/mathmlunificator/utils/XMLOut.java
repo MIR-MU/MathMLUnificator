@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
@@ -41,20 +42,42 @@ public class XMLOut {
     }
 
     /**
+     * Pretty print W3C DOM represented XML node to the application standard
+     * output.
+     *
+     * @param node W3C DOM represented XML node to pretty print.
+     */
+    public static void xmlStdoutSerializer(Node node) {
+        xmlSerializer(node, System.out);
+    }
+
+    /**
      * Pretty print W3C DOM represented XML document to a given output stream.
      *
      * @param doc W3C DOM represented XML document to pretty print.
      * @param os Output stream to pretty print input XML to.
      */
     public static void xmlSerializer(Document doc, OutputStream os) {
-        DOMImplementation domImpl = doc.getImplementation();
+        xmlSerializer((Node) doc, os);
+    }
+
+    /**
+     * Pretty print W3C DOM represented XML document to a given output stream.
+     *
+     * @param node W3C DOM node to pretty print.
+     * @param os Output stream to pretty print input XML to.
+     */
+    public static void xmlSerializer(Node node, OutputStream os) {
+        DOMImplementation domImpl = node.getNodeType() == Node.DOCUMENT_NODE
+                ? ((Document) node).getImplementation()
+                : node.getOwnerDocument().getImplementation();
         DOMImplementationLS ls = (DOMImplementationLS) domImpl;
         LSOutput lso = ls.createLSOutput();
         LSSerializer lss = ls.createLSSerializer();
         lss.getDomConfig().setParameter("xml-declaration", true);
         lss.getDomConfig().setParameter("format-pretty-print", true);
         lso.setByteStream(os);
-        lss.write(doc, lso);
+        lss.write(node, lso);
     }
 
     /**
@@ -67,6 +90,19 @@ public class XMLOut {
     public static String xmlStringSerializer(Document doc) {
         OutputStream os = new ByteArrayOutputStream();
         xmlSerializer(doc, os);
+        return os.toString();
+    }
+
+    /**
+     * Transform W3C DOM represented XML node to pretty-printed string
+     * representation.
+     *
+     * @param node W3C DOM represented XML node to pretty print.
+     * @return Pretty-printed strign representation of the input DOM.
+     */
+    public static String xmlStringSerializer(Node node) {
+        OutputStream os = new ByteArrayOutputStream();
+        xmlSerializer(node, os);
         return os.toString();
     }
 

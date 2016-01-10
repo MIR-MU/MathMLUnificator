@@ -16,6 +16,7 @@
 package cz.muni.fi.mir.mathmlunificator.utils;
 
 import cz.muni.fi.mir.mathmlunificator.AbstractXMLTransformationTest;
+import cz.muni.fi.mir.mathmlunificator.config.Constants;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,6 +25,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -31,10 +34,9 @@ import org.xml.sax.SAXException;
  */
 public class XMLOutTest extends AbstractXMLTransformationTest {
 
-    private static final String testFile = "multiple-formulae";
-
     @Test
-    public void testXmlSerializer() {
+    public void testXmlSerializer_Document_OutputStream() {
+        final String testFile = "multiple-formulae";
         try {
             Document inputDoc = DOMBuilder.buildDoc(getInputXMLTestResource(testFile));
             OutputStream os = new ByteArrayOutputStream();
@@ -48,7 +50,26 @@ public class XMLOutTest extends AbstractXMLTransformationTest {
     }
 
     @Test
-    public void testXmlStdoutSerializer() {
+    public void testXmlSerializer_Node_OutputStream() {
+        final String testFile = "single-formula";
+        try {
+            Document inputDoc = DOMBuilder.buildDoc(getInputXMLTestResource(testFile));
+            NodeList nodeList = inputDoc.getElementsByTagNameNS(Constants.MATHML_NS, "mfrac");
+            assertEquals(1, nodeList.getLength());
+            Node node = nodeList.item(0);
+            OutputStream os = new ByteArrayOutputStream();
+            XMLOut.xmlSerializer(node, os);
+            String output = os.toString();
+            System.out.println("testXmlSerializer – output:\n" + output);
+            testXML(testFile, output);
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testXmlStdoutSerializer_Document() {
+        final String testFile = "multiple-formulae";
         try {
             Document inputDoc = DOMBuilder.buildDoc(getInputXMLTestResource(testFile));
             ByteArrayOutputStream stdoutContent = new ByteArrayOutputStream();
@@ -65,10 +86,48 @@ public class XMLOutTest extends AbstractXMLTransformationTest {
     }
 
     @Test
-    public void testXmlStringSerializer() {
+    public void testXmlStdoutSerializer_Node() {
+        final String testFile = "single-formula";
+        try {
+            Document inputDoc = DOMBuilder.buildDoc(getInputXMLTestResource(testFile));
+            NodeList nodeList = inputDoc.getElementsByTagNameNS(Constants.MATHML_NS, "mfrac");
+            assertEquals(1, nodeList.getLength());
+            Node node = nodeList.item(0);
+            ByteArrayOutputStream stdoutContent = new ByteArrayOutputStream();
+            PrintStream stdout = System.out;
+            System.setOut(new PrintStream(stdoutContent));
+            XMLOut.xmlStdoutSerializer(node);
+            System.setOut(stdout);
+            String output = stdoutContent.toString();
+            System.out.println("testXmlStdoutSerializer – output:\n" + output);
+            testXML(testFile, output);
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testXmlStringSerializer_Document() {
+        final String testFile = "multiple-formulae";
         try {
             Document inputDoc = DOMBuilder.buildDoc(getInputXMLTestResource(testFile));
             String outputDoc = XMLOut.xmlStringSerializer(inputDoc);
+            System.out.println("testXmlStringSerializer – output:\n" + outputDoc);
+            testXML(testFile, outputDoc);
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testXmlStringSerializer_Node() {
+        final String testFile = "single-formula";
+        try {
+            Document inputDoc = DOMBuilder.buildDoc(getInputXMLTestResource(testFile));
+            NodeList nodeList = inputDoc.getElementsByTagNameNS(Constants.MATHML_NS, "mfrac");
+            assertEquals(1, nodeList.getLength());
+            Node node = nodeList.item(0);
+            String outputDoc = XMLOut.xmlStringSerializer(node);
             System.out.println("testXmlStringSerializer – output:\n" + outputDoc);
             testXML(testFile, outputDoc);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
