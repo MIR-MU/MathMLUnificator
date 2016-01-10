@@ -119,8 +119,8 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
 
         try {
 
-            Document doc = DOMBuilder.buildDoc(
-                    "<math xmlns:uni=\"http://mir.fi.muni.cz/mathml-unification/\"\n"
+            String xmlString
+                    = "<math xmlns:uni=\"http://mir.fi.muni.cz/mathml-unification/\"\n"
                     + "    uni:unification-level=\"2\" uni:unification-max-level=\"4\" xmlns=\"http://www.w3.org/1998/Math/MathML\">\n"
                     + "    <msup>\n"
                     + "        <mi>a</mi>\n"
@@ -131,7 +131,9 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
                     + "        <mi>c</mi>\n"
                     + "        <mi>d</mi>\n"
                     + "    </mfrac>\n"
-                    + "</math>");
+                    + "</math>";
+            Document originalDoc = DOMBuilder.buildDoc(xmlString);
+            Document doc = DOMBuilder.buildDoc(xmlString);
 
             // deep == true
             NodeList deepNodeList = doc.getElementsByTagNameNS("http://www.w3.org/1998/Math/MathML", "mo");
@@ -140,6 +142,9 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
             Document newDeepDoc = DOMBuilder.createNewDocWithNodeClone(deepNode, true);
             System.out.println("testCreateNewDocWithNodeClone – deep output:\n" + XMLOut.xmlStringSerializer(newDeepDoc));
             testXML("Deep clonning failed", DOMBuilder.buildDoc("<mo xmlns=\"http://www.w3.org/1998/Math/MathML\">+</mo>"), newDeepDoc);
+            newDeepDoc.getDocumentElement().setTextContent("deep different content");
+            System.out.println("testCreateNewDocWithNodeClone – input document DOM after deep processing:\n" + XMLOut.xmlStringSerializer(doc));
+            testXML("Original document DOM changed after processing", originalDoc, doc);
 
             // deep == false
             NodeList noDeepNodeList = doc.getElementsByTagNameNS("http://www.w3.org/1998/Math/MathML", "mfrac");
@@ -148,6 +153,9 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
             Document newNoDeepDoc = DOMBuilder.createNewDocWithNodeClone(noDeepNode, false);
             System.out.println("testCreateNewDocWithNodeClone – non-deep output:\n" + XMLOut.xmlStringSerializer(newNoDeepDoc));
             testXML("Non-deep clonning failed", DOMBuilder.buildDoc("<mfrac xmlns=\"http://www.w3.org/1998/Math/MathML\"/>"), newNoDeepDoc);
+            newNoDeepDoc.getDocumentElement().setTextContent("non-deep different content");
+            System.out.println("testCreateNewDocWithNodeClone – input document DOM after non-deep processing:\n" + XMLOut.xmlStringSerializer(doc));
+            testXML("Original document DOM changed after processing", originalDoc, doc);
 
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             fail(ex.getMessage());
@@ -160,8 +168,8 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
 
         try {
 
-            Document doc = DOMBuilder.buildDoc(
-                    "<math xmlns:uni=\"http://mir.fi.muni.cz/mathml-unification/\"\n"
+            String xmlString
+                    = "<math xmlns:uni=\"http://mir.fi.muni.cz/mathml-unification/\"\n"
                     + "    uni:unification-level=\"2\" uni:unification-max-level=\"4\" xmlns=\"http://www.w3.org/1998/Math/MathML\">\n"
                     + "    <msup>\n"
                     + "        <mi>a</mi>\n"
@@ -172,7 +180,9 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
                     + "        <mi>c</mi>\n"
                     + "        <mi>d</mi>\n"
                     + "    </mfrac>\n"
-                    + "</math>");
+                    + "</math>";
+            Document originalDoc = DOMBuilder.buildDoc(xmlString);
+            Document doc = DOMBuilder.buildDoc(xmlString);
 
             // deep == true
             NodeList deepNodeList = doc.getElementsByTagNameNS("http://www.w3.org/1998/Math/MathML", "mo");
@@ -181,6 +191,9 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
             Node newDeepNode = DOMBuilder.cloneNodeToNewDoc(deepNode, true);
             System.out.println("testCloneNodeToNewDoc – deep output:\n" + XMLOut.xmlStringSerializer(newDeepNode.getOwnerDocument()));
             testXML("Deep clonning failed", DOMBuilder.buildDoc("<mo xmlns=\"http://www.w3.org/1998/Math/MathML\">+</mo>"), newDeepNode.getOwnerDocument());
+            newDeepNode.setTextContent("deep different content");
+            System.out.println("testCloneNodeToNewDoc – input document DOM after non-deep processing:\n" + XMLOut.xmlStringSerializer(doc));
+            testXML("Original document DOM changed after processing", originalDoc, doc);
 
             // deep == false
             NodeList noDeepNodeList = doc.getElementsByTagNameNS("http://www.w3.org/1998/Math/MathML", "mfrac");
@@ -189,6 +202,9 @@ public class DOMBuilderTest extends AbstractXMLTransformationTest {
             Node newNoDeepNode = DOMBuilder.cloneNodeToNewDoc(noDeepNode, false);
             System.out.println("testCloneNodeToNewDoc – non-deep output:\n" + XMLOut.xmlStringSerializer(newNoDeepNode.getOwnerDocument()));
             testXML("Non-deep clonning failed", DOMBuilder.buildDoc("<mfrac xmlns=\"http://www.w3.org/1998/Math/MathML\"/>"), newNoDeepNode.getOwnerDocument());
+            newNoDeepNode.setTextContent("non-deep different content");
+            System.out.println("testCloneNodeToNewDoc – input document DOM after non-deep processing:\n" + XMLOut.xmlStringSerializer(doc));
+            testXML("Original document DOM changed after processing", originalDoc, doc);
 
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             fail(ex.getMessage());

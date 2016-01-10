@@ -134,8 +134,7 @@ public class DOMBuilder {
      */
     public static Document createNewDocWithNodeClone(Node nodeToClone, boolean deep) {
         Document newDoc = DOMBuilder.createEmptyDoc();
-        nodeToClone = newDoc.adoptNode(nodeToClone.cloneNode(deep));
-        newDoc.appendChild(nodeToClone);
+        newDoc.appendChild(newDoc.importNode(nodeToClone, deep));
         return newDoc;
     }
 

@@ -269,7 +269,7 @@ public class MathMLUnificator {
             unifiedNodesList = new HashMap<>();
             // Create a new separate DOM to work over with imporeted clone of the node given by user
             unifiedMathDoc = DOMBuilder.createNewDocWithNodeClone(mathNode, true);
-            unifiedMathDoc.getFirstChild().setPrefix("m");
+            mathNode = unifiedMathDoc.getDocumentElement();
         }
 
         // Parse XML subtree starting at mathNode and remember elements by their depth.

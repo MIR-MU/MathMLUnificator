@@ -100,6 +100,8 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
     @Test
     public void testGetUnifiedMathMLNodes() {
 
+        final String inputFile = "single-formula.node-unification";
+
         try {
 
             // Expected collection
@@ -115,7 +117,7 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
             // Produced collection
             DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
-            Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.node-unification"));
+            Document doc = docBuilder.parse(getInputXMLTestResource(inputFile));
             HashMap<Integer, Node> docNodeList = MathMLUnificator.getUnifiedMathMLNodes(doc.getDocumentElement());
 
             System.out.println("testGetUnifyMathMLNodes – output:");
@@ -128,7 +130,10 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
                 testXML("Different unification at level " + Integer.toString(i),
                         expectedNodeList.get(i).getOwnerDocument(), docNodeList.get(i).getOwnerDocument());
             }
-            //assertTrue(docNodeList.equals(expectedNodeList));
+
+            System.out.println("testGetUnifyMathMLNodes – input document DOM after processing:\n" + XMLOut.xmlStringSerializer(doc));
+            Document originalDoc = docBuilder.parse(getInputXMLTestResource(inputFile));
+            testXML("Original document DOM changed after processing", originalDoc, doc);
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             fail(ex.getMessage());
