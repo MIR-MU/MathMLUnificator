@@ -52,6 +52,12 @@ public class MathMLUnificatorCommandLineTool {
     private static final String JARFILE = "mathml-unificator.jar";
 
     /**
+     * If <code>true</code> unify also operator nodes, otherwise keep operator
+     * nodes intact.
+     */
+    private static boolean operatorUnification = false;
+
+    /**
      * Main (starting) method of the command line application.
      *
      * @param argv Array of command line arguments that are expected to be
@@ -62,6 +68,7 @@ public class MathMLUnificatorCommandLineTool {
     public static void main(String argv[]) throws ParserConfigurationException {
 
         final Options options = new Options();
+        options.addOption("p", "operator-unification", false, "unify operator in addition to other types of nodes");
         options.addOption("h", "help", false, "print help");
 
         final CommandLineParser parser = new DefaultParser();
@@ -78,6 +85,9 @@ public class MathMLUnificatorCommandLineTool {
                 printHelp(options);
                 System.exit(0);
             }
+            if (line.hasOption('p')) {
+                operatorUnification = true;
+            }
 
             final List<String> arguments = Arrays.asList(line.getArgs());
             if (arguments.size() > 0) {
@@ -90,7 +100,7 @@ public class MathMLUnificatorCommandLineTool {
                     try {
 
                         Document doc = DOMBuilder.buildDocFromFilepath(filepath);
-                        MathMLUnificator.unifyMathML(doc);
+                        MathMLUnificator.unifyMathML(doc, operatorUnification);
                         if (arguments.size() == 1) {
                             xmlStdoutSerializer(doc);
                         } else {
@@ -102,6 +112,7 @@ public class MathMLUnificatorCommandLineTool {
                             ((Element) itemNode).setAttributeNodeNS(filenameAttr);
                             itemNode.appendChild(rootNode.getOwnerDocument().importNode(doc.getDocumentElement(), true));
                             rootNode.appendChild(itemNode);
+
                         }
 
                     } catch (SAXException | IOException ex) {
@@ -130,7 +141,7 @@ public class MathMLUnificatorCommandLineTool {
     private static void printHelp(Options options) {
 
         System.err.println("Usage:");
-        System.err.println("\tjava -jar " + JARFILE + " input.xml [ input.xml ... ]");
+        System.err.println("\tjava -jar " + JARFILE + " [ -p ] input.xml [ input.xml ... ]");
         System.err.println("\tjava -jar " + JARFILE + " -h");
         System.err.println("Options:");
         HelpFormatter formatter = new HelpFormatter();

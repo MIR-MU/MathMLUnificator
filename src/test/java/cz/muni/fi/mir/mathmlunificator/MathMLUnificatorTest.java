@@ -35,18 +35,23 @@ import org.xml.sax.SAXException;
  */
 public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
+    private final boolean[] trueFalseCollection = {true, false};
+
     @Test
     public void testUnifyMathML_Document() {
         try {
 
             DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
-            Document doc = docBuilder.parse(getInputXMLTestResource("multiple-formulae.document-unification"));
-            Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("multiple-formulae.document-unification"));
 
-            MathMLUnificator.unifyMathML(doc);
+            for (boolean operators : trueFalseCollection) {
+                Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("multiple-formulae.document-unification.operators-" + operators));
+                Document doc = docBuilder.parse(getInputXMLTestResource("multiple-formulae.document-unification"));
 
-            System.out.println("testUnifyMathML_Document – output:\n" + XMLOut.xmlStringSerializer(doc));
-            testXML(expectedDoc, doc);
+                MathMLUnificator.unifyMathML(doc, operators);
+
+                System.out.println("testUnifyMathML_Document (operators " + operators + ") – output:\n" + XMLOut.xmlStringSerializer(doc));
+                testXML(expectedDoc, doc);
+            }
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             fail(ex.getMessage());
@@ -59,14 +64,16 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
         try {
 
             DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
-            Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("multiple-formulae.document-unification"));
+            for (boolean operators : trueFalseCollection) {
+                Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("multiple-formulae.document-unification.operators-" + operators));
 
-            ByteArrayOutputStream osDoc = new ByteArrayOutputStream();
-            MathMLUnificator.unifyMathML(getInputXMLTestResource("multiple-formulae.document-unification"), osDoc);
-            String doc = osDoc.toString();
+                ByteArrayOutputStream osDoc = new ByteArrayOutputStream();
+                MathMLUnificator.unifyMathML(getInputXMLTestResource("multiple-formulae.document-unification"), osDoc, operators);
+                String doc = osDoc.toString();
 
-            System.out.println("testUnifyMathML_InputStream_OutputStream – output:\n" + doc);
-            testXML(expectedDoc, doc);
+                System.out.println("testUnifyMathML_InputStream_OutputStream (operators " + operators + ") – output:\n" + doc);
+                testXML(expectedDoc, doc);
+            }
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             fail(ex.getMessage());
@@ -79,17 +86,20 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
         try {
 
             DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
-            Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.node-unification"));
-            Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("single-formula.node-unification"));
 
-            NodeList nodeList = doc.getElementsByTagNameNS(MATHML_NS, "mfrac");
-            assertEquals(1, nodeList.getLength());
+            for (boolean operators : trueFalseCollection) {
+                Document expectedDoc = docBuilder.parse(getExpectedXMLTestResource("single-formula.node-unification.operators-" + operators));
+                Document doc = docBuilder.parse(getInputXMLTestResource("single-formula.node-unification"));
 
-            Node node = nodeList.item(0);
-            MathMLUnificator.unifyMathMLNode(node);
+                NodeList nodeList = doc.getElementsByTagNameNS(MATHML_NS, "mfrac");
+                assertEquals(1, nodeList.getLength());
 
-            System.out.println("testUnifyMathMLNode – output:\n" + XMLOut.xmlStringSerializer(doc));
-            testXML(expectedDoc, doc);
+                Node node = nodeList.item(0);
+                MathMLUnificator.unifyMathMLNode(node, operators);
+
+                System.out.println("testUnifyMathMLNode (operators " + operators + ") – output:\n" + XMLOut.xmlStringSerializer(doc));
+                testXML(expectedDoc, doc);
+            }
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             fail(ex.getMessage());
@@ -104,36 +114,42 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
         try {
 
-            // Expected collection
-            HashMap<Integer, Node> expectedNodeList = new HashMap<>(4);
-            Document node1 = DOMBuilder.buildDoc(getXMLTestResource("collection-of-unified-mathml-nodes.item-1"));
-            expectedNodeList.put(1, node1.getDocumentElement());
-            Document node2 = DOMBuilder.buildDoc(getXMLTestResource("collection-of-unified-mathml-nodes.item-2"));
-            expectedNodeList.put(2, node2.getDocumentElement());
-            Document node3 = DOMBuilder.buildDoc(getXMLTestResource("collection-of-unified-mathml-nodes.item-3"));
-            expectedNodeList.put(3, node3.getDocumentElement());
-            Document node4 = DOMBuilder.buildDoc(getXMLTestResource("collection-of-unified-mathml-nodes.item-4"));
-            expectedNodeList.put(4, node4.getDocumentElement());
-
-            // Produced collection
             DocumentBuilder docBuilder = DOMBuilder.getDocumentBuilder();
-            Document doc = docBuilder.parse(getInputXMLTestResource(inputFile));
-            HashMap<Integer, Node> docNodeList = MathMLUnificator.getUnifiedMathMLNodes(doc.getDocumentElement());
 
-            System.out.println("testGetUnifyMathMLNodes – output:");
-            for (Node n : docNodeList.values()) {
-                XMLOut.xmlStdoutSerializer(n.getOwnerDocument());
+            for (boolean operators : trueFalseCollection) {
+
+                // Expected collection
+                HashMap<Integer, Node> expectedNodeList = new HashMap<>(4);
+                Document node1 = DOMBuilder.buildDoc(getXMLTestResource("collection-of-unified-mathml-nodes.item-1.operators-" + operators));
+                expectedNodeList.put(1, node1.getDocumentElement());
+                Document node2 = DOMBuilder.buildDoc(getXMLTestResource("collection-of-unified-mathml-nodes.item-2.operators-" + operators));
+                expectedNodeList.put(2, node2.getDocumentElement());
+                Document node3 = DOMBuilder.buildDoc(getXMLTestResource("collection-of-unified-mathml-nodes.item-3.operators-" + operators));
+                expectedNodeList.put(3, node3.getDocumentElement());
+                if (operators) {
+                    Document node4 = DOMBuilder.buildDoc(getXMLTestResource("collection-of-unified-mathml-nodes.item-4.operators-" + operators));
+                    expectedNodeList.put(4, node4.getDocumentElement());
+                }
+
+                // Produced collection
+                Document doc = docBuilder.parse(getInputXMLTestResource(inputFile));
+                HashMap<Integer, Node> docNodeList = MathMLUnificator.getUnifiedMathMLNodes(doc.getDocumentElement(), operators);
+
+                System.out.println("testGetUnifyMathMLNodes (operators " + operators + ") – output:");
+                for (Node n : docNodeList.values()) {
+                    XMLOut.xmlStdoutSerializer(n.getOwnerDocument());
+                }
+
+                assertEquals(expectedNodeList.keySet(), docNodeList.keySet());
+                for (Integer i : expectedNodeList.keySet()) {
+                    testXML("Different unification at level " + Integer.toString(i) + " (operators " + operators + ")",
+                            expectedNodeList.get(i).getOwnerDocument(), docNodeList.get(i).getOwnerDocument());
+                }
+
+                System.out.println("testGetUnifyMathMLNodes (operators " + operators + ") – input document DOM after processing:\n" + XMLOut.xmlStringSerializer(doc));
+                Document originalDoc = docBuilder.parse(getInputXMLTestResource(inputFile));
+                testXML("Original document DOM changed after processing (operators " + operators + ")", originalDoc, doc);
             }
-
-            assertEquals(expectedNodeList.keySet(), docNodeList.keySet());
-            for (Integer i : expectedNodeList.keySet()) {
-                testXML("Different unification at level " + Integer.toString(i),
-                        expectedNodeList.get(i).getOwnerDocument(), docNodeList.get(i).getOwnerDocument());
-            }
-
-            System.out.println("testGetUnifyMathMLNodes – input document DOM after processing:\n" + XMLOut.xmlStringSerializer(doc));
-            Document originalDoc = docBuilder.parse(getInputXMLTestResource(inputFile));
-            testXML("Original document DOM changed after processing", originalDoc, doc);
 
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             fail(ex.getMessage());

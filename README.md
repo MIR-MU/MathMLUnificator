@@ -19,10 +19,12 @@ For more information see [https://mir.fi.muni.cz/](https://mir.fi.muni.cz/).
 
 ```none
 Usage:
-	java -jar mathml-unificator.jar input.xml [ input.xml ... ]
+	java -jar mathml-unificator.jar [ -p ] input.xml [ input.xml ... ]
 	java -jar mathml-unificator.jar -h
 Options:
-        -h,--help        print help
+        -h,--help                        print help
+        -p,--operator-unification        unify operator in addition to other
+                                         types of nodes
 ```
 
 ### File encoding on Windows
@@ -46,7 +48,7 @@ chcp 65001
 ### Example
 
 ```xml
-$ java -jar mathml-unificator.jar sample-data/single-formula.xml
+$ java -jar mathml-unificator.jar -p sample-data/single-formula.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <unified-math xmlns="http://mir.fi.muni.cz/mathml-unification/">
     <math xmlns="http://www.w3.org/1998/Math/MathML">

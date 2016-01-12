@@ -85,13 +85,15 @@ public class MathMLUnificator {
      * </p>
      *
      * @param doc W3C DOM representation of the XML document to work on.
+     * @param operatorUnification If <code>true</code> unify also operator
+     * nodes, otherwise keep operator nodes intact.
      * @see DocumentParser#findMathMLNodes(org.w3c.dom.Document)
      */
-    public static void unifyMathML(Document doc) {
+    public static void unifyMathML(Document doc, boolean operatorUnification) {
 
         List<Node> mathNodes = DocumentParser.findMathMLNodes(doc);
         for (Node mathNode : mathNodes) {
-            MathMLUnificator.unifyMathMLNode(mathNode);
+            MathMLUnificator.unifyMathMLNode(mathNode, operatorUnification);
         }
 
     }
@@ -120,17 +122,19 @@ public class MathMLUnificator {
      * XML document to work on.
      * @param os Output stream to write UTF-8 encoded string representation of
      * the processed XML document.
+     * @param operatorUnification If <code>true</code> unify also operator
+     * nodes, otherwise keep operator nodes intact.
      * @throws java.io.IOException If any I/O error occurs while reading the
      * input stream.
      * @see DocumentParser#findMathMLNodes(org.w3c.dom.Document)
      */
-    public static void unifyMathML(InputStream is, OutputStream os) throws IOException {
+    public static void unifyMathML(InputStream is, OutputStream os, boolean operatorUnification) throws IOException {
 
         String originalDoc = IOUtils.toString(is);
 
         try {
             Document doc = DOMBuilder.buildDoc(new ByteArrayInputStream(originalDoc.getBytes()));
-            unifyMathML(doc);
+            unifyMathML(doc, operatorUnification);
             XMLOut.xmlSerializer(doc, os);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             Logger.getLogger(MathMLUnificator.class.getName()).log(Level.SEVERE, "MathML Unification from string failed, input string not modified.", ex);
@@ -156,10 +160,12 @@ public class MathMLUnificator {
      *
      * @param mathNode W3C DOM XML document representation attached MathML node
      * to work on.
+     * @param operatorUnification If <code>true</code> unify also operator
+     * nodes, otherwise keep operator nodes intact.
      */
-    public static void unifyMathMLNode(Node mathNode) {
+    public static void unifyMathMLNode(Node mathNode, boolean operatorUnification) {
 
-        new MathMLUnificator().unifyMathMLNodeImpl(mathNode);
+        new MathMLUnificator().unifyMathMLNodeImpl(mathNode, operatorUnification, true);
 
     }
 
@@ -173,13 +179,15 @@ public class MathMLUnificator {
      *
      * @param mathNode W3C DOM XML document representation attached MathML node
      * to work on.
+     * @param operatorUnification If <code>true</code> unify also operator
+     * nodes, otherwise keep operator nodes intact.
      * @return Collection of unified versions of the <code>mathNode</code> with
      * key of the {@link HashMap} describing order (level of unification) of
      * elements in the collection.
      */
-    public static HashMap<Integer, Node> getUnifiedMathMLNodes(Node mathNode) {
+    public static HashMap<Integer, Node> getUnifiedMathMLNodes(Node mathNode, boolean operatorUnification) {
 
-        return new MathMLUnificator().unifyMathMLNodeImpl(mathNode, false);
+        return new MathMLUnificator().unifyMathMLNodeImpl(mathNode, operatorUnification, false);
 
     }
 
@@ -206,10 +214,12 @@ public class MathMLUnificator {
      *
      * @param mathNode W3C DOM XML document representation attached MathML node
      * to work on.
+     * @param operatorUnification If <code>true</code> unify also operator
+     * nodes, otherwise keep operator nodes intact.
      */
-    private void unifyMathMLNodeImpl(Node mathNode) {
+    private void unifyMathMLNodeImpl(Node mathNode, boolean operatorUnification) {
 
-        unifyMathMLNodeImpl(mathNode, true);
+        unifyMathMLNodeImpl(mathNode, operatorUnification, true);
 
     }
 
@@ -239,12 +249,14 @@ public class MathMLUnificator {
      * @param workInPlace If <code>true</code>, given <code>mathNode</code> will
      * be modified in place; if <code>false</code>, <code>mathNode</code> will
      * not be modified and series of modified nodes will be returned.
+     * @param operatorUnification If <code>true</code> unify also operator
+     * nodes, otherwise keep operator nodes intact.
      * @return <code>null</code> if <code>workInPlace</code> is
      * <code>false</code>; otherwise collection of unified versions of the
      * <code>mathNode</code> with key of the {@link HashMap} describing order
      * (level of unification) of elements in the collection.
      */
-    private HashMap<Integer, Node> unifyMathMLNodeImpl(Node mathNode, boolean workInPlace) {
+    private HashMap<Integer, Node> unifyMathMLNodeImpl(Node mathNode, boolean operatorUnification, boolean workInPlace) {
 
         if (mathNode.getOwnerDocument() == null) {
             String msg = "The given node is not attached to any document.";
@@ -273,7 +285,7 @@ public class MathMLUnificator {
         }
 
         // Parse XML subtree starting at mathNode and remember elements by their depth.
-        rememberLevelsOfNodes(mathNode);
+        rememberLevelsOfNodes(mathNode, operatorUnification);
 
         // Build series of formulae of level by level unified MathML.
         NodeLevel<Integer, Integer> level = new NodeLevel<>(getMaxMajorNodesLevel(), NUMOFMINORLEVELS);
@@ -334,12 +346,14 @@ public class MathMLUnificator {
      * {@link #nodesByDepth}.
      *
      * @param rootNode XML DOM node to use as root element for processing.
+     * @param operatorUnification If <code>true</code> unify also operator
+     * nodes, otherwise keep operator nodes intact.
      */
-    private void rememberLevelsOfNodes(Node rootNode) {
+    private void rememberLevelsOfNodes(Node rootNode, boolean operatorUnification) {
 
         NodeList nodeList = rootNode.getChildNodes();
 
-        rememberNodesStartingAtLevel(1, nodeList);
+        rememberNodesStartingAtLevel(1, nodeList, operatorUnification);
 
     }
 
@@ -353,8 +367,10 @@ public class MathMLUnificator {
      * this starting level.
      * @param nodeList Collection of nodes to use as root elements for
      * processing.
+     * @param operatorUnification If <code>true</code> unify also operator
+     * nodes, otherwise keep operator nodes intact.
      */
-    private void rememberNodesStartingAtLevel(int level, NodeList nodeList) {
+    private void rememberNodesStartingAtLevel(int level, NodeList nodeList, boolean operatorUnification) {
 
         if (nodeList != null && nodeList.getLength() > 0) {
 
@@ -365,7 +381,9 @@ public class MathMLUnificator {
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 if (node.getNodeName().equals(PMATHML_OPERATOR)) {
-                    nodesOperator.add(node);
+                    if (operatorUnification) {
+                        nodesOperator.add(node);
+                    }
                 } else {
                     nodesNonOperator.add(node);
                 }
@@ -382,7 +400,7 @@ public class MathMLUnificator {
 
             for (Node node : nodesNonOperator) {
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    rememberNodesStartingAtLevel(level + 1, node.getChildNodes());
+                    rememberNodesStartingAtLevel(level + 1, node.getChildNodes(), operatorUnification);
                 }
             }
 
