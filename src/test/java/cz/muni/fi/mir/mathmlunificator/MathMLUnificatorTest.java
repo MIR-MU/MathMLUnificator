@@ -248,6 +248,18 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
             assertFalse("Namespaced math node with not-a-number unification level attribute is not unified",
                     MathMLUnificator.isUnifiedMathNode(node));
 
+            node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("is-unified-math-nodes.case-7")).getDocumentElement();
+            assertNotNull(node);
+            assertTrue("Namespaced msqrt node with unification level attribute is unified",
+                    MathMLUnificator.isUnifiedMathNode(node));
+
+            node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("is-unified-math-nodes.case-8")).getDocumentElement();
+            assertNotNull(node);
+            assertFalse("Not-namespaced msqrt node with unification level attribute is not unified",
+                    MathMLUnificator.isUnifiedMathNode(node));
+
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             fail(ex.getMessage());
         }

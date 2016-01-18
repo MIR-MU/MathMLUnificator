@@ -511,11 +511,15 @@ public class MathMLUnificator {
      * In case the input DOM was created as namespace unaware or the input XML
      * document does not correctly use namespaces the method tries to fall back
      * to element-plain-name-only math node detection. The element is considered
-     * to be math element it the local name of the element is &lt;math&gt; (see
+     * to be math element if
+     * <ul>
+     * <li>the element is in MathML namespace XML namespace
+     * {@code http://www.w3.org/1998/Math/MathML} (see
+     * {@link Constants#MATHML_NS}),</li>
+     * <li>or the local name of the element is {@code <math>} (see
      * {@link Constants#UNIFIED_MATHML_ROOT_ELEM}) without any namespace
-     * definition or in the MathML namespace XML namespace
-     * <code>http://www.w3.org/1998/Math/MathML</code> (see
-     * {@link Constants#MATHML_NS}).
+     * definition.
+     * </ul>
      * </p>
      *
      * @param node The node to test.
@@ -527,8 +531,8 @@ public class MathMLUnificator {
         // Test the nodes is element
         if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
             // Test the node is math node in MathML namesapce or at least with corrent name if no namesapce is defined at all
-            if ((node.getNamespaceURI() == null || node.getNamespaceURI().equals(MATHML_NS))
-                    && node.getNodeName().equals(MATHML_ROOT_ELEM)) {
+            if ((node.getNamespaceURI() == null && node.getNodeName().equals(MATHML_ROOT_ELEM))
+                    || (node.getNamespaceURI() != null && node.getNamespaceURI().equals(MATHML_NS))) {
                 // Test presence of unification level attribute
                 Node uniLevel = node.getAttributes().getNamedItemNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_LEVEL_ATTR);
                 if (uniLevel != null && uniLevel.getNodeType() == Node.ATTRIBUTE_NODE) {
