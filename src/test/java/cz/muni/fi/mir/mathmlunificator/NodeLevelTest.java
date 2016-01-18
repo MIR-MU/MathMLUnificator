@@ -40,6 +40,7 @@ public class NodeLevelTest {
         NodeLevel<Integer, Integer> nlA = new NodeLevel<>(2, 5);
         NodeLevel<Integer, Integer> nlB = new NodeLevel<>(Integer.valueOf("2"), Integer.valueOf("5"));
         NodeLevel<Integer, Integer> nlX = new NodeLevel<>(5, 2);
+        assertEquals(true, nlA.equals(nlA));
         assertEquals(true, nlA.equals(nlB));
         assertEquals(false, nlA.equals(nlX));
 

@@ -550,4 +550,50 @@ public class MathMLUnificator {
 
     }
 
+    /**
+     * <p>
+     * Determine the unification level of the {@link Node} and max level of the
+     * unification series. If the node does not possess the appropriate
+     * unification level XML attributes the {@link UnificationLevel} object will
+     * indicate that by having both {@link UnificationLevel#nodeLevel} and
+     * {@link UnificationLevel#maxLevel} set to {@code null}.
+     * </p>
+     * <p>
+     * <strong>Please note that only existance of valid unification level XML
+     * attributes is tested. If you want to be sure the node is a valid unified
+     * math node use {@link #isUnifiedMathNode(org.w3c.dom.Node)}!</strong>
+     * </p>
+     *
+     * @param node The node to determine the unification level for.
+     * @return The node's unification level represented by an instance of
+     * {@link UnificationLevel}.
+     * @see #unifyMathMLNode(org.w3c.dom.Node, boolean)
+     */
+    public static UnificationLevel getNodeUnificationLevel(Node node) {
+
+        Integer uniLevelValue = 0;
+        Integer maxLevelValue = 0;
+
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+            // Get unification level attributes if exists
+            Node uniLevel = node.getAttributes().getNamedItemNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_LEVEL_ATTR);
+            Node maxLevel = node.getAttributes().getNamedItemNS(UNIFIED_MATHML_NS, UNIFIED_MATHML_MAX_LEVEL_ATTR);
+            if (uniLevel != null && uniLevel.getNodeType() == Node.ATTRIBUTE_NODE
+                    && maxLevel != null && maxLevel.getNodeType() == Node.ATTRIBUTE_NODE) {
+                try {
+                    uniLevelValue = Integer.parseInt(((Attr) uniLevel).getTextContent());
+                    maxLevelValue = Integer.parseInt(((Attr) maxLevel).getTextContent());
+                    if (uniLevelValue > 0 && maxLevelValue > 0) {
+                        return new UnificationLevel(uniLevelValue, maxLevelValue);
+                    }
+                } catch (NumberFormatException ex) {
+                    return new UnificationLevel();
+                }
+            }
+        }
+
+        return new UnificationLevel();
+
+    }
+
 }

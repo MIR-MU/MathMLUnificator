@@ -254,4 +254,46 @@ public class MathMLUnificatorTest extends AbstractXMLTransformationTest {
 
     }
 
+    @Test
+    public void testGetNodeUnificationLevel() {
+
+        try {
+
+            Node nonMathMLNSNullNullNode = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("get-node-unification-level.without-mathml-ns.null-null")).getDocumentElement();
+            Node mathMLNSNullNullNode = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("get-node-unification-level.with-mathml-ns.null-null")).getDocumentElement();
+            Node nonMathMLNS12Node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("get-node-unification-level.without-mathml-ns.1-2")).getDocumentElement();
+            Node mathMLNS12Node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("get-node-unification-level.with-mathml-ns.1-2")).getDocumentElement();
+            Node nonMathMLNS23Node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("get-node-unification-level.without-mathml-ns.2-3")).getDocumentElement();
+            Node mathMLNS23Node = DOMBuilder.getDocumentBuilder()
+                    .parse(getXMLTestResource("get-node-unification-level.with-mathml-ns.2-3")).getDocumentElement();
+
+            assertNotNull(nonMathMLNSNullNullNode);
+            assertEquals(new UnificationLevel(), MathMLUnificator.getNodeUnificationLevel(nonMathMLNSNullNullNode));
+
+            assertNotNull(mathMLNSNullNullNode);
+            assertEquals(new UnificationLevel(), MathMLUnificator.getNodeUnificationLevel(mathMLNSNullNullNode));
+
+            assertNotNull(nonMathMLNS12Node);
+            assertEquals(new UnificationLevel(1, 2), MathMLUnificator.getNodeUnificationLevel(nonMathMLNS12Node));
+
+            assertNotNull(mathMLNS12Node);
+            assertEquals(new UnificationLevel(1, 2), MathMLUnificator.getNodeUnificationLevel(mathMLNS12Node));
+
+            assertNotNull(nonMathMLNS23Node);
+            assertEquals(new UnificationLevel(2, 3), MathMLUnificator.getNodeUnificationLevel(nonMathMLNS23Node));
+
+            assertNotNull(mathMLNS23Node);
+            assertEquals(new UnificationLevel(2, 3), MathMLUnificator.getNodeUnificationLevel(mathMLNS23Node));
+
+        } catch (SAXException | IOException | ParserConfigurationException ex) {
+            fail(ex.getMessage());
+        }
+
+    }
+
 }
