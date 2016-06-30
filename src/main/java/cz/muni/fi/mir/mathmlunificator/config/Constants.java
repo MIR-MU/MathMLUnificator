@@ -113,13 +113,30 @@ public class Constants {
     public static final String CMATHML_UNIFICATOR = "\u25D0";
 
     /**
-     * Set of <a href="https://www.w3.org/TR/MathML2/appendixc.html">names of
-     * known Content MathML elements</a>.
+     * Names of Content MathML identifier and number elements.
+     *
+     * See the list of
+     * <a href="https://www.w3.org/TR/MathML2/appendixc.html">known Content
+     * MathML elements</a>.
      */
     public static final Set<String> CMATHML_IDENTIFIER_OR_NUMBER
             = Stream.of(
                     "ci",
                     "cn"
+            ).collect(Collectors.toCollection(HashSet::new));
+
+    /**
+     * Names of Content MathML annotation-like elements.
+     *
+     * See the list of
+     * <a href="https://www.w3.org/TR/MathML2/appendixc.html">known Content
+     * MathML elements</a>.
+     */
+    public static final Set<String> CMATHML_ANNOTATIONS
+            = Stream.of(
+                    "semantics",
+                    "annotation",
+                    "annotation-xml"
             ).collect(Collectors.toCollection(HashSet::new));
 
     /**

@@ -474,15 +474,17 @@ public class MathMLUnificator {
         if (parentNode == null) {
             throw new IllegalArgumentException("Cannot replace node [" + oldNode + "] that has no parent.");
         } else {
-            String unificator = PMATHML_UNIFICATOR;
-            String unificatorElementType = oldNode.getNodeName().equals(PMATHML_OPERATOR) ? PMATHML_OPERATOR : PMATHML_IDENTIFIER;
-            if (MathMLTools.isContentMathMLNode(oldNode)) {
-                unificator = CMATHML_UNIFICATOR;
-                unificatorElementType = Constants.CMATHML_IDENTIFIER_OR_NUMBER.contains(oldNode.getNodeName()) ? CMATHML_IDENTIFIER : CMATHML_SYMBOL;
+            if (!Constants.CMATHML_ANNOTATIONS.contains(oldNode.getNodeName())) {  // Do not modify annotation elements!
+                String unificator = PMATHML_UNIFICATOR;
+                String unificatorElementType = oldNode.getNodeName().equals(PMATHML_OPERATOR) ? PMATHML_OPERATOR : PMATHML_IDENTIFIER;
+                if (MathMLTools.isContentMathMLNode(oldNode)) {
+                    unificator = CMATHML_UNIFICATOR;
+                    unificatorElementType = Constants.CMATHML_IDENTIFIER_OR_NUMBER.contains(oldNode.getNodeName()) ? CMATHML_IDENTIFIER : CMATHML_SYMBOL;
+                }
+                Node newNode = oldNode.getOwnerDocument().createElementNS(oldNode.getNamespaceURI(), unificatorElementType);
+                newNode.setTextContent(unificator);
+                parentNode.replaceChild(newNode, oldNode);
             }
-            Node newNode = oldNode.getOwnerDocument().createElementNS(oldNode.getNamespaceURI(), unificatorElementType);
-            newNode.setTextContent(unificator);
-            parentNode.replaceChild(newNode, oldNode);
         }
 
     }
