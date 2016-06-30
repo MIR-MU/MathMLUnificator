@@ -48,6 +48,16 @@ public class Constants {
     public static final String PMATHML_IDENTIFIER = "mi";
 
     /**
+     * Content MathML symbol element name.
+     */
+    public static final String CMATHML_SYMBOL = "csymbol";
+
+    /**
+     * Content MathML identifier element name.
+     */
+    public static final String CMATHML_IDENTIFIER = "ci";
+
+    /**
      * MathML Unificator XML markup namespace.
      */
     public static final String UNIFIED_MATHML_NS = "http://mir.fi.muni.cz/mathml-unification/";
@@ -91,9 +101,26 @@ public class Constants {
     public static final String UNIFIED_MATHML_MAX_LEVEL_ATTR = "unification-max-level";
 
     /**
-     * Symbol used in MathML Unificator XML markup for XML tree substitutions.
+     * Symbol used in MathML Unificator XML markup for XML tree substitutions of
+     * Presentation MathML nodes.
      */
-    public static final String UNIFICATOR = "\u25CD";
+    public static final String PMATHML_UNIFICATOR = "\u25CD";
+
+    /**
+     * Symbol used in MathML Unificator XML markup for XML tree substitutions of
+     * Content MathML nodes.
+     */
+    public static final String CMATHML_UNIFICATOR = "\u25D0";
+
+    /**
+     * Set of <a href="https://www.w3.org/TR/MathML2/appendixc.html">names of
+     * known Content MathML elements</a>.
+     */
+    public static final Set<String> CMATHML_IDENTIFIER_OR_NUMBER
+            = Stream.of(
+                    "ci",
+                    "cn"
+            ).collect(Collectors.toCollection(HashSet::new));
 
     /**
      * Set of <a href="https://www.w3.org/TR/MathML2/appendixb.html">names of
