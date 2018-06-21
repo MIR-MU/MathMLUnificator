@@ -1,4 +1,7 @@
 # MathML Unificator
+[![CircleCI](https://circleci.com/gh/MIR-MU/MathMLUnificator/tree/master.svg?style=shield)][ci]
+
+ [ci]: https://circleci.com/gh/MIR-MU/MathMLUnificator/tree/master (CircleCI)
 
 MathML Unificator is a tool which performs simple MathML (Mathematical Markup 
 Language) unification as proposed in
