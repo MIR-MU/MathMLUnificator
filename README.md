@@ -1,54 +1,40 @@
-# MathML Unificator
+MathML Unificator – Generalizes mathematical formulae for structural unification
+================================================================================
 [![CircleCI](https://circleci.com/gh/MIR-MU/MathMLUnificator/tree/master.svg?style=shield)][ci]
 
  [ci]: https://circleci.com/gh/MIR-MU/MathMLUnificator/tree/master (CircleCI)
 
-MathML Unificator is a tool which performs simple MathML (Mathematical Markup 
-Language) unification as proposed in
-[RŮŽIČKA, Michal, Petr SOJKA and Martin LÍŠKA.
- Math Indexer and Searcher under the Hood:
- History and Development of a Winning Strategy.
- In Noriko Kando, Hideo Joho, Kazuaki Kishida.
- Proceedings of the 11th NTCIR Conference on Evaluation of Information Access
- Technologies.
- Tokyo: National Institute of Informatics, 2-1-2 Hitotsubashi, Chiyoda-ku, Tokyo
- 101-8430 Japan, 2014. p. 127-134, 8 pp. ISBN 978-4-86049-065-2]
-(http://research.nii.ac.jp/ntcir/workshop/OnlineProceedings11/pdf/NTCIR/Math-2/07-NTCIR11-MATH-RuzickaM.pdf#page=7&zoom=page-fit).
+[MathML Unificator][mathmlunificator] is a tool which performs structural
+MathML unification as proposed by [Růžička, Sojka, and Líška,
+2016][ruzickaetal16].
 
-For more information see [https://mir.fi.muni.cz/](https://mir.fi.muni.cz/).
+ [mathmlunificator]: https://mir.fi.muni.cz/mathml-normalization/#mathml-unificator
+ [ruzickaetal16]: http://research.nii.ac.jp/ntcir/workshop/OnlineProceedings12/pdf/ntcir/MathIR/05-NTCIR12-MathIR-RuzickaM.pdf
 
+Usage
+=====
+File encoding on Windows
+------------------------
 
-## Usage
+On Windows, file encodings default to system-language-specific single-byte
+encodings. To ensure that JVM uses UTF-8, start JVM with command line argument
+`-Dfile.encoding=UTF-8` as follows:
 
-```none
-Usage:
-	java -jar mathml-unificator.jar [ -p ] input.xml [ input.xml ... ]
-	java -jar mathml-unificator.jar -h
-Options:
-        -h,--help                        print help
-        -p,--operator-unification        unify operator in addition to other
-                                         types of nodes
 ```
-
-### File encoding on Windows
-
-On Windows, file encoding defaults to system-language-specific single-byte
-encoding. To ensure JVM uses UTF-8 start JVM with command line argument
-`-Dfile.encoding=UTF-8`:
-
-```none
 java -Dfile.encoding=UTF-8 -jar mathml-unificator.jar
 ```
 
 However, be aware the default Windows command line shell has significant
 problems with Unicode in the default configuration. Try Lucida console font with
-appropriate [shell code page setting](http://stackoverflow.com/questions/388490/unicode-characters-in-windows-command-line-how/388500#388500):
+appropriate [shell code page setting][stack-overflow].
 
-```shell
-chcp 65001
-```
+ [stack-overflow]: https://stackoverflow.com/a/41787848/657401
 
-### Example
+Example
+-------
+
+Executing the following command derives a series of four increasingly general
+formulae from an [example formula](sample-data/single-formula.xml):
 
 ```xml
 $ java -jar mathml-unificator.jar -p sample-data/single-formula.xml
@@ -108,6 +94,27 @@ $ java -jar mathml-unificator.jar -p sample-data/single-formula.xml
 </unified-math>
 ```
 
+Citing MathML Unificator
+========================
+Text
+----
+RŮŽIČKA, Michal, Petr SOJKA a Martin LÍŠKA. Math Indexer and Searcher under
+the Hood: Fine-Tuning Query Expansion and Unification Strategies. In
+*Proceedings of the 12th NTCIR Conference on Evaluation of Information Access
+Technologies.* Tokyo: National Institute of Informatics, 2-1-2 Hitotsubashi,
+Chiyoda-ku, Tokyo 101-8430 Japan, 2016. 7 pp. 
 
-## Licence
-MathML Unificator is licensed under the terms of the Apache License, Version 2.0.
+BibTeX
+------
+``` bib
+@inproceedings{RuzickaSojkaLiska16Math,
+     author = "Michal R\r{u}\v{z}icka and Petr Sojka and Michal L{\' i}ska",
+      title = "{Math Indexer and Searcher under the Hood: Fine-tuning Query
+                Expansion and Unification Strategies.}",
+  booktitle = "{Proceedings of the 12th NTCIR Conference on Evaluation of
+                Information Access Technologies}",
+     editor = "{Noriko Kando et al.}",
+      pages = "331--337",
+       year = 2016,
+}
+```
