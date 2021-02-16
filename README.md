@@ -1,8 +1,8 @@
 MathML Unificator – Generalizes mathematical formulae for structural unification
 ================================================================================
-[![CircleCI](https://circleci.com/gh/MIR-MU/MathMLUnificator/tree/master.svg?style=shield)][ci]
+[![ci](https://github.com/MIR-MU/MathMLUnificator/workflows/Build/badge.svg)][ci]
 
- [ci]: https://circleci.com/gh/MIR-MU/MathMLUnificator/tree/master (CircleCI)
+ [ci]: https://github.com/MIR-MU/MathMLUnificator/actions (GitHub Actions)
 
 [MathML Unificator][mathmlunificator] is a tool which performs structural
 MathML unification as proposed by [Růžička, Sojka, and Líška,
