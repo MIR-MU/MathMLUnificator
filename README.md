@@ -108,7 +108,7 @@ BibTeX
 ------
 ``` bib
 @inproceedings{RuzickaSojkaLiska16Math,
-     author = "Michal R\r{u}\v{z}icka and Petr Sojka and Martin L{\' i}ska",
+     author = "Michal R\r{u}\v{z}i\v{c}ka and Petr Sojka and Martin L\'{i}\v{s}ka",
       title = "{Math Indexer and Searcher under the Hood: Fine-tuning Query
                 Expansion and Unification Strategies.}",
   booktitle = "{Proceedings of the 12th NTCIR Conference on Evaluation of
